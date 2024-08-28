@@ -1,6 +1,9 @@
 {
   "name": "nodecommerce",
   "version": "1.0.0",
+  "author": "Paolo Dapul",
+  "license": "MIT",
+  "description": "E-commerce in Node.js",
   "main": "index.js",
   "scripts": {
     "dev": "nodemon src/index.ts",
@@ -8,10 +11,6 @@
     "start": "NODE_ENV=production node dist/index.js",
     "lint": "eslint ."
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "description": "",
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
