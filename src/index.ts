@@ -1,6 +1,7 @@
 import express, { Express, Request, Response } from "express";
 import dotenv from "dotenv";
 import cors, { CorsOptions } from "cors";
+import helmet from "helmet";
 
 const ENV = process.env.NODE_ENV ?? "development";
 
@@ -26,7 +27,9 @@ const corsOptions: CorsOptions = {
   },
 };
 
+app.use(helmet());
 app.use(cors(corsOptions));
+
 app.get("/", (req: Request, res: Response) => {
   res.send(`Welcome to Nodecommerce - ${ENV}`);
 });
