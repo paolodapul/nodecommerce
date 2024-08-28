@@ -2,8 +2,8 @@ import express, { Express, Request, Response } from "express";
 import dotenv from "dotenv";
 import cors, { CorsOptions } from "cors";
 import helmet from "helmet";
-
 const ENV = process.env.NODE_ENV ?? "development";
+import { errorHandler } from "./middleware";
 
 dotenv.config({ path: `.env.${ENV}` });
 
@@ -29,6 +29,7 @@ const corsOptions: CorsOptions = {
 
 app.use(helmet());
 app.use(cors(corsOptions));
+app.use(errorHandler);
 
 app.get("/", (req: Request, res: Response) => {
   res.send(`Welcome to Nodecommerce - ${ENV}`);
