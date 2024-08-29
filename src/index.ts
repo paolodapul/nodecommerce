@@ -1,21 +1,11 @@
-import express, { Express, Request, Response } from "express";
+import { createApp } from "./server";
 import dotenv from "dotenv";
-import helmet from "helmet";
-import { errorHandler, corsMiddleware as cors } from "./middleware";
 
 const ENV = process.env.NODE_ENV ?? "development";
 dotenv.config({ path: `.env.${ENV}` });
 
-const app: Express = express();
 const port = process.env.PORT ?? 3000;
-
-app.use(helmet());
-app.use(cors);
-app.use(errorHandler);
-
-app.get("/", (req: Request, res: Response) => {
-  res.send(`Welcome to Nodecommerce - ${ENV}`);
-});
+const app = createApp(ENV);
 
 app.listen(port, () => {
   console.log(
