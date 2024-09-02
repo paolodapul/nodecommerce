@@ -1,0 +1,30 @@
+import { NextFunction, Request, RequestHandler, Response } from "express";
+import * as userService from "../services/userService";
+
+type User = {
+  username: string;
+  email: string;
+  password: string;
+};
+
+const register = (async (
+  req: Request<object, object, User>,
+  res: Response,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  _next: NextFunction
+) => {
+  try {
+    const userData = req.body;
+    const newUser = await userService.register(userData);
+    res
+      .status(201)
+      .json({ description: "New user has been created.", id: newUser._id });
+  } catch (error) {
+    res.status(500).json({
+      error: "Registration failed",
+      message: (error as Error).message,
+    });
+  }
+}) as RequestHandler;
+
+export { register };
