@@ -15,7 +15,7 @@ export default tseslint.config(
     },
   },
   {
-    ignores: ["dist", "eslint.config.mjs"],
+    ignores: ["dist", "eslint.config.mjs", "coverage"],
   },
   {
     files: ["./src/**/*.ts"],
