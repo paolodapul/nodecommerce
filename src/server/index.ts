@@ -9,6 +9,7 @@ function createApp(ENV: string) {
   app.use(helmet());
   app.use(cors);
   app.use(errorHandler);
+  app.use(express.json());
   app.use("/api", routes);
 
   app.get("/", (req: Request, res: Response) => {
