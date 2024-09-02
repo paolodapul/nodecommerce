@@ -27,4 +27,22 @@ const register = (async (
   }
 }) as RequestHandler;
 
-export { register };
+const login = (async (
+  req: Request<object, object, User>,
+  res: Response,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  _next: NextFunction
+) => {
+  try {
+    const userData = req.body;
+    const user = await userService.login(userData);
+    res.status(200).json({ description: "Found user.", user });
+  } catch (error) {
+    res.status(500).json({
+      error: "Login failed",
+      message: (error as Error).message,
+    });
+  }
+}) as RequestHandler;
+
+export { register, login };
