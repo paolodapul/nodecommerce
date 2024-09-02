@@ -1,12 +1,15 @@
 import { IncomingMessage, Server, ServerResponse } from "http";
 import { createApp } from "./server";
 import dotenv from "dotenv";
+import { connectMongoDB, disconnectMongoDB } from "./config/database";
 
 const ENV = process.env.NODE_ENV ?? "development";
 dotenv.config({ path: `.env.${ENV}` });
 
 const port = process.env.PORT ?? 3000;
 const app = createApp(ENV);
+
+void (async () => await connectMongoDB())();
 
 const server = app.listen(port, () => {
   console.log(
@@ -30,8 +33,8 @@ async function gracefulShutdown(
 }
 
 process.on("SIGINT", () => {
-  void gracefulShutdown("SIGINT", server, async () => Promise.resolve());
+  void gracefulShutdown("SIGINT", server, disconnectMongoDB);
 });
 process.on("SIGTERM", () => {
-  void gracefulShutdown("SIGTERM", server, async () => Promise.resolve());
+  void gracefulShutdown("SIGTERM", server, disconnectMongoDB);
 });
