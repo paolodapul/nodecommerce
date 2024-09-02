@@ -7,6 +7,9 @@ function errorHandler(
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   _next: NextFunction
 ): void {
+  /**
+   * TODO: Implement a proper logging service
+   */
   console.error(err.stack);
 
   res.status(500).json({
