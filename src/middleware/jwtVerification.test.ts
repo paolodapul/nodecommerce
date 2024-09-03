@@ -39,7 +39,9 @@ describe("verifyToken middleware", () => {
       .set("Authorization", `Bearer ${token}`);
 
     expect(response.status).toBe(401);
-    expect((response.body as ResponseBody).message).toBe("Invalid Token");
+    expect((response.body as ResponseBody).message).toBe(
+      "Unauthorized access."
+    );
   });
 
   it("should deny access with no token", async () => {
@@ -47,7 +49,7 @@ describe("verifyToken middleware", () => {
 
     expect(response.status).toBe(403);
     expect((response.body as ResponseBody).message).toBe(
-      "A token is required for authentication"
+      "Unauthorized access."
     );
   });
 
@@ -60,6 +62,8 @@ describe("verifyToken middleware", () => {
       .set("Authorization", `Bearer ${token}`);
 
     expect(response.status).toBe(401);
-    expect((response.body as ResponseBody).message).toBe("Invalid Token");
+    expect((response.body as ResponseBody).message).toBe(
+      "Unauthorized access."
+    );
   });
 });

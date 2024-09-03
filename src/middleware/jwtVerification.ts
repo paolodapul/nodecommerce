@@ -14,9 +14,7 @@ const jwtVerification = (
   const token = typeof headerValue === "string" ? headerValue : undefined;
 
   if (!token) {
-    return res
-      .status(403)
-      .json({ message: "A token is required for authentication" });
+    return res.status(403).json({ message: "Unauthorized access." });
   }
 
   try {
@@ -29,7 +27,7 @@ const jwtVerification = (
     }
   } catch (err) {
     console.error(err);
-    return res.status(401).json({ message: "Invalid Token" });
+    return res.status(401).json({ message: "Unauthorized access." });
   }
 
   return next();
