@@ -1,6 +1,10 @@
 import express, { Express, Request, Response } from "express";
 import helmet from "helmet";
-import { errorHandler, corsMiddleware as cors } from "../middleware";
+import {
+  errorHandler,
+  corsMiddleware as cors,
+  jwtVerification,
+} from "../middleware";
 import routes from "../routes";
 
 function createApp(ENV: string) {
@@ -8,13 +12,15 @@ function createApp(ENV: string) {
 
   app.use(helmet());
   app.use(cors);
-  app.use(errorHandler);
   app.use(express.json());
-  app.use("/api", routes);
 
   app.get("/", (req: Request, res: Response) => {
     res.send(`Welcome to Nodecommerce - ${ENV}`);
   });
+
+  app.use("/api", jwtVerification);
+  app.use("/api", routes);
+  app.use(errorHandler);
 
   return app;
 }
