@@ -5,7 +5,7 @@ import {
   corsMiddleware as cors,
   jwtVerification,
 } from "../middleware";
-import routes from "../routes";
+import publicRoutes from "../routes/public";
 
 function createApp(ENV: string) {
   const app: Express = express();
@@ -18,8 +18,13 @@ function createApp(ENV: string) {
     res.send(`Welcome to Nodecommerce - ${ENV}`);
   });
 
+  app.use("/api", publicRoutes);
   app.use("/api", jwtVerification);
-  app.use("/api", routes);
+
+  /**
+   * Add private routes after `jwtVerification`
+   */
+
   app.use(errorHandler);
 
   return app;
