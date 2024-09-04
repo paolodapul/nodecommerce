@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 import { initializeRoles } from "./initializeRoles";
 import dotenv from "dotenv";
+import { initializeUsers } from "./initializeUsers";
 
 const ENV = process.env.NODE_ENV ?? "development";
 dotenv.config({ path: `.env.${ENV}` });
@@ -12,6 +13,7 @@ async function runSeeders() {
     await mongoose.connect(MONGO_URI as string);
     console.log("Connected to MongoDB");
     await initializeRoles();
+    await initializeUsers();
     console.log("All seeders completed successfully");
   } catch (error) {
     console.error("Error running seeders:", error);
