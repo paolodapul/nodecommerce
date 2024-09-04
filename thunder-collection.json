@@ -1,0 +1,245 @@
+{
+    "clientName": "Thunder Client",
+    "collectionName": "Nodecommerce",
+    "collectionId": "d53f9122-041e-4511-a7fa-17f466be7fb1",
+    "dateExported": "2024-09-04T04:57:03.764Z",
+    "version": "1.2",
+    "folders": [
+        {
+            "_id": "e86f3313-f38c-4a8d-9bc4-7ae8111e5944",
+            "name": "Users",
+            "containerId": "",
+            "created": "2024-09-02T07:35:20.648Z",
+            "sortNum": 10000
+        },
+        {
+            "_id": "bab6d9b6-2fb1-421a-8e00-9b76199358a3",
+            "name": "Routes",
+            "containerId": "",
+            "created": "2024-09-04T02:24:25.348Z",
+            "sortNum": 20000
+        },
+        {
+            "_id": "2e00bdf0-9422-4b83-9fa8-32aa0fbbc127",
+            "name": "Products",
+            "containerId": "",
+            "created": "2024-09-04T02:24:37.249Z",
+            "sortNum": 30000
+        }
+    ],
+    "requests": [
+        {
+            "_id": "41cca603-cbfe-4867-80bf-40b472e38340",
+            "colId": "d53f9122-041e-4511-a7fa-17f466be7fb1",
+            "containerId": "e86f3313-f38c-4a8d-9bc4-7ae8111e5944",
+            "name": "Register",
+            "url": "http://localhost:3000/api/users/register",
+            "method": "POST",
+            "sortNum": 10000,
+            "created": "2024-09-02T07:35:27.414Z",
+            "modified": "2024-09-04T04:56:42.520Z",
+            "headers": [
+                {
+                    "name": "Content-Type",
+                    "value": "application/json"
+                }
+            ],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"username\": \"John\",\n  \"email\": \"user@example.com\",\n  \"password\": \"123\"\n}",
+                "form": []
+            }
+        },
+        {
+            "_id": "c0982dd3-e917-439d-ad6a-1038d4e57e63",
+            "colId": "d53f9122-041e-4511-a7fa-17f466be7fb1",
+            "containerId": "bab6d9b6-2fb1-421a-8e00-9b76199358a3",
+            "name": "Test Private Route - Without Token",
+            "url": "http://localhost:3000/api/products",
+            "method": "POST",
+            "sortNum": 10000,
+            "created": "2024-09-03T02:03:03.837Z",
+            "modified": "2024-09-04T03:52:36.444Z",
+            "headers": []
+        },
+        {
+            "_id": "5764c97c-55bb-4756-8106-426ca23c4553",
+            "colId": "d53f9122-041e-4511-a7fa-17f466be7fb1",
+            "containerId": "e86f3313-f38c-4a8d-9bc4-7ae8111e5944",
+            "name": "Log in - Customer",
+            "url": "http://localhost:3000/api/users/login",
+            "method": "POST",
+            "sortNum": 20000,
+            "created": "2024-09-02T10:32:46.357Z",
+            "modified": "2024-09-04T03:33:17.302Z",
+            "headers": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"username\": \"johndoe\",\n  \"email\": \"john@example.com\",\n  \"password\": \"password123\"\n}",
+                "form": []
+            }
+        },
+        {
+            "_id": "98848c46-b4c7-4d50-9df2-a8378adb5c73",
+            "colId": "d53f9122-041e-4511-a7fa-17f466be7fb1",
+            "containerId": "e86f3313-f38c-4a8d-9bc4-7ae8111e5944",
+            "name": "Log in - Admin",
+            "url": "http://localhost:3000/api/users/login",
+            "method": "POST",
+            "sortNum": 30000,
+            "created": "2024-09-04T03:38:15.042Z",
+            "modified": "2024-09-04T03:39:06.237Z",
+            "headers": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"username\": \"adminuser\",\n  \"email\": \"admin@example.com\",\n  \"password\": \"adminpass789\"\n}",
+                "form": []
+            }
+        },
+        {
+            "_id": "8295f931-8d86-4b4c-abc6-47549c27facc",
+            "colId": "d53f9122-041e-4511-a7fa-17f466be7fb1",
+            "containerId": "2e00bdf0-9422-4b83-9fa8-32aa0fbbc127",
+            "name": "Create Product as Customer",
+            "url": "http://localhost:3000/api/products",
+            "method": "POST",
+            "sortNum": 40000,
+            "created": "2024-09-04T02:25:09.066Z",
+            "modified": "2024-09-04T04:54:52.415Z",
+            "headers": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"name\": \"iPhone\",\n  \"price\": 100,\n  \"description\": \"Best phone in the world.\"\n}",
+                "form": []
+            },
+            "auth": {
+                "type": "bearer",
+                "bearer": "<add JWT here>"
+            }
+        },
+        {
+            "_id": "e4c9c7ea-401f-4488-96b2-9677eef73897",
+            "colId": "d53f9122-041e-4511-a7fa-17f466be7fb1",
+            "containerId": "2e00bdf0-9422-4b83-9fa8-32aa0fbbc127",
+            "name": "Create Product as Admin",
+            "url": "http://localhost:3000/api/products",
+            "method": "POST",
+            "sortNum": 50000,
+            "created": "2024-09-04T03:39:27.118Z",
+            "modified": "2024-09-04T04:55:15.779Z",
+            "headers": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"name\": \"Samsung S24 Ultra\",\n  \"price\": 100,\n  \"description\": \"Second best phone in the world.\"\n}",
+                "form": []
+            },
+            "auth": {
+                "type": "bearer",
+                "bearer": "<add JWT here>"
+            }
+        },
+        {
+            "_id": "a4c3722d-dcb3-45e7-830e-3499fc631f3a",
+            "colId": "d53f9122-041e-4511-a7fa-17f466be7fb1",
+            "containerId": "2e00bdf0-9422-4b83-9fa8-32aa0fbbc127",
+            "name": "Get Products as Customer",
+            "url": "http://localhost:3000/api/products",
+            "method": "GET",
+            "sortNum": 50000,
+            "created": "2024-09-04T03:55:19.121Z",
+            "modified": "2024-09-04T04:54:57.935Z",
+            "headers": [],
+            "auth": {
+                "type": "bearer",
+                "bearer": "<add JWT here>"
+            }
+        },
+        {
+            "_id": "d12f9393-d0f0-4cfc-ade9-b0411f58e58b",
+            "colId": "d53f9122-041e-4511-a7fa-17f466be7fb1",
+            "containerId": "2e00bdf0-9422-4b83-9fa8-32aa0fbbc127",
+            "name": "Update Product as Admin",
+            "url": "http://localhost:3000/api/products/66d7d9d51e3bdfea504f930c",
+            "method": "PUT",
+            "sortNum": 60000,
+            "created": "2024-09-04T03:42:25.672Z",
+            "modified": "2024-09-04T04:55:25.895Z",
+            "headers": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"name\": \"iPhone 15\",\n  \"price\": 100,\n  \"description\": \"Best phone in the world.\"\n}",
+                "form": []
+            },
+            "auth": {
+                "type": "bearer",
+                "bearer": "<add JWT here>"
+            }
+        },
+        {
+            "_id": "8fded320-e560-4dc7-b62b-bcacfbfd48de",
+            "colId": "d53f9122-041e-4511-a7fa-17f466be7fb1",
+            "containerId": "2e00bdf0-9422-4b83-9fa8-32aa0fbbc127",
+            "name": "Get Product by ID as Customer",
+            "url": "http://localhost:3000/api/products/66d7da5d1e3bdfea504f9319",
+            "method": "GET",
+            "sortNum": 60000,
+            "created": "2024-09-04T03:56:36.749Z",
+            "modified": "2024-09-04T04:55:04.584Z",
+            "headers": [],
+            "auth": {
+                "type": "bearer",
+                "bearer": "<add JWT here>"
+            }
+        },
+        {
+            "_id": "695c1f03-8891-413c-a118-df335c8b0d77",
+            "colId": "d53f9122-041e-4511-a7fa-17f466be7fb1",
+            "containerId": "2e00bdf0-9422-4b83-9fa8-32aa0fbbc127",
+            "name": "Create Product as Guest",
+            "url": "http://localhost:3000/api/products",
+            "method": "POST",
+            "sortNum": 60000,
+            "created": "2024-09-04T04:02:39.270Z",
+            "modified": "2024-09-04T04:03:00.355Z",
+            "headers": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"name\": \"iPhone\",\n  \"price\": 100,\n  \"description\": \"Best phone in the world.\"\n}",
+                "form": []
+            }
+        },
+        {
+            "_id": "b49e293c-6ebe-4c48-8bed-da693dc12576",
+            "colId": "d53f9122-041e-4511-a7fa-17f466be7fb1",
+            "containerId": "2e00bdf0-9422-4b83-9fa8-32aa0fbbc127",
+            "name": "Delete Product as Admin",
+            "url": "http://localhost:3000/api/products/66d7d9d51e3bdfea504f930c",
+            "method": "DELETE",
+            "sortNum": 70000,
+            "created": "2024-09-04T03:45:31.237Z",
+            "modified": "2024-09-04T04:55:29.460Z",
+            "headers": [],
+            "auth": {
+                "type": "bearer",
+                "bearer": "<add JWT here>"
+            }
+        },
+        {
+            "_id": "069b2778-4f53-47ad-9ccf-6c958652da06",
+            "colId": "d53f9122-041e-4511-a7fa-17f466be7fb1",
+            "containerId": "2e00bdf0-9422-4b83-9fa8-32aa0fbbc127",
+            "name": "Get Product by ID as Customer - Invalid Product ID",
+            "url": "http://localhost:3000/api/products/66d7da5d1e3bdfea504f9311",
+            "method": "GET",
+            "sortNum": 70000,
+            "created": "2024-09-04T03:57:06.001Z",
+            "modified": "2024-09-04T04:55:09.953Z",
+            "headers": [],
+            "auth": {
+                "type": "bearer",
+                "bearer": "<add JWT here>"
+            }
+        }
+    ],
+    "ref": "cpsK_3AGMk6hvxAYIwiNjpRLPizpWCvoUfNJhh3aVzgM6xwGjUVIdHSOYiUBkrniqgesXYNca4K-o7PmhxyHvw"
+}
