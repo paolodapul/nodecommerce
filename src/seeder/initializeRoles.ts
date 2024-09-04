@@ -13,6 +13,7 @@ async function initializeRoles() {
         "update_orders",
         "cancel_orders",
       ],
+      description: "Administrator with full access to the system",
     },
     {
       name: "customer",
@@ -22,17 +23,22 @@ async function initializeRoles() {
         "view_customer_orders",
         "cancel_customer_orders",
       ],
+      description: "Regular customer with basic shopping privileges",
     },
   ];
 
   for (const role of roles) {
-    await Role.findOneAndUpdate({ name: role.name }, role, {
-      upsert: true,
-      new: true,
-    });
+    try {
+      await Role.findOneAndUpdate({ name: role.name }, role, {
+        upsert: true,
+        new: true,
+        setDefaultsOnInsert: true,
+      });
+      console.log(`Role ${role.name} initialized successfully`);
+    } catch (error) {
+      console.error(`Error initializing role ${role.name}:`, error);
+    }
   }
-
-  console.log("Roles initialized");
 }
 
 export { initializeRoles };
