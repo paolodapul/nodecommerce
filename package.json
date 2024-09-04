@@ -10,7 +10,8 @@
     "build": "tsc",
     "start": "NODE_ENV=production node dist/index.js",
     "lint": "eslint .",
-    "test": "jest"
+    "test": "jest",
+    "seed": "ts-node ./src/seeder/index.ts"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
