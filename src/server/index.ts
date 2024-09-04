@@ -6,6 +6,7 @@ import {
   jwtVerification,
 } from "../middleware";
 import publicRoutes from "../routes/public";
+import privateRoutes from "../routes/private";
 
 function createApp(ENV: string) {
   const app: Express = express();
@@ -20,11 +21,7 @@ function createApp(ENV: string) {
 
   app.use("/api", publicRoutes);
   app.use("/api", jwtVerification);
-
-  /**
-   * Add private routes after `jwtVerification`
-   */
-
+  app.use("/api", privateRoutes);
   app.use(errorHandler);
 
   return app;
