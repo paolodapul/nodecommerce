@@ -2,7 +2,7 @@
     "clientName": "Thunder Client",
     "collectionName": "Nodecommerce",
     "collectionId": "d53f9122-041e-4511-a7fa-17f466be7fb1",
-    "dateExported": "2024-09-04T04:57:03.764Z",
+    "dateExported": "2024-09-04T07:28:28.077Z",
     "version": "1.2",
     "folders": [
         {
@@ -25,6 +25,20 @@
             "containerId": "",
             "created": "2024-09-04T02:24:37.249Z",
             "sortNum": 30000
+        },
+        {
+            "_id": "a569901c-649e-4475-9ebc-fbb355dff4b7",
+            "name": "Cart",
+            "containerId": "",
+            "created": "2024-09-04T06:08:22.324Z",
+            "sortNum": 40000
+        },
+        {
+            "_id": "ac22faa5-17e1-4ebf-a7cf-07ea1dce1eb7",
+            "name": "Orders",
+            "containerId": "",
+            "created": "2024-09-04T06:58:45.075Z",
+            "sortNum": 50000
         }
     ],
     "requests": [
@@ -63,6 +77,38 @@
             "headers": []
         },
         {
+            "_id": "d29c4629-8d7d-43c2-9cc4-5b18f46145f9",
+            "colId": "d53f9122-041e-4511-a7fa-17f466be7fb1",
+            "containerId": "a569901c-649e-4475-9ebc-fbb355dff4b7",
+            "name": "Get Cart of a Customer",
+            "url": "http://localhost:3000/api/cart/66d7d4382647de9ffe8049ff",
+            "method": "GET",
+            "sortNum": 10000,
+            "created": "2024-09-04T06:08:34.189Z",
+            "modified": "2024-09-04T07:27:57.090Z",
+            "headers": [],
+            "auth": {
+                "type": "bearer",
+                "bearer": "<add JWT here>"
+            }
+        },
+        {
+            "_id": "978b43b8-431b-4651-9d71-13f8274209d6",
+            "colId": "d53f9122-041e-4511-a7fa-17f466be7fb1",
+            "containerId": "ac22faa5-17e1-4ebf-a7cf-07ea1dce1eb7",
+            "name": "Get Orders of a Customer",
+            "url": "http://localhost:3000/api/orders/user/66d7d4382647de9ffe8049ff",
+            "method": "GET",
+            "sortNum": 10000,
+            "created": "2024-09-04T06:58:50.569Z",
+            "modified": "2024-09-04T07:28:10.435Z",
+            "headers": [],
+            "auth": {
+                "type": "bearer",
+                "bearer": "<add JWT here>"
+            }
+        },
+        {
             "_id": "5764c97c-55bb-4756-8106-426ca23c4553",
             "colId": "d53f9122-041e-4511-a7fa-17f466be7fb1",
             "containerId": "e86f3313-f38c-4a8d-9bc4-7ae8111e5944",
@@ -77,6 +123,48 @@
                 "type": "json",
                 "raw": "{\n  \"username\": \"johndoe\",\n  \"email\": \"john@example.com\",\n  \"password\": \"password123\"\n}",
                 "form": []
+            }
+        },
+        {
+            "_id": "7b2cdaf8-e59e-49c7-ab06-72850b5bced1",
+            "colId": "d53f9122-041e-4511-a7fa-17f466be7fb1",
+            "containerId": "a569901c-649e-4475-9ebc-fbb355dff4b7",
+            "name": "Add to Cart of a Customer",
+            "url": "http://localhost:3000/api/cart/66d7d4382647de9ffe8049ff/items",
+            "method": "POST",
+            "sortNum": 20000,
+            "created": "2024-09-04T06:15:47.204Z",
+            "modified": "2024-09-04T07:28:00.411Z",
+            "headers": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"productId\": \"66d7da5d1e3bdfea504f9319\",\n  \"quantity\": 1\n}",
+                "form": []
+            },
+            "auth": {
+                "type": "bearer",
+                "bearer": "<add JWT here>"
+            }
+        },
+        {
+            "_id": "6844e8b8-8bbe-46d4-be9c-22c668868472",
+            "colId": "d53f9122-041e-4511-a7fa-17f466be7fb1",
+            "containerId": "ac22faa5-17e1-4ebf-a7cf-07ea1dce1eb7",
+            "name": "Create Orders of a Customer",
+            "url": "http://localhost:3000/api/orders",
+            "method": "POST",
+            "sortNum": 20000,
+            "created": "2024-09-04T07:00:41.180Z",
+            "modified": "2024-09-04T07:28:13.669Z",
+            "headers": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"items\": []\n}",
+                "form": []
+            },
+            "auth": {
+                "type": "bearer",
+                "bearer": "<add JWT here>"
             }
         },
         {
@@ -97,6 +185,43 @@
             }
         },
         {
+            "_id": "b48572d3-09e6-4609-ba44-6018d830036b",
+            "colId": "d53f9122-041e-4511-a7fa-17f466be7fb1",
+            "containerId": "a569901c-649e-4475-9ebc-fbb355dff4b7",
+            "name": "Update Cart Item",
+            "url": "http://localhost:3000/api/cart/66d7d4382647de9ffe8049ff/items/66d7da5d1e3bdfea504f9319",
+            "method": "PUT",
+            "sortNum": 30000,
+            "created": "2024-09-04T06:29:00.713Z",
+            "modified": "2024-09-04T07:28:03.794Z",
+            "headers": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"productId\": \"66d7da5d1e3bdfea504f9319\",\n  \"quantity\": 2\n}",
+                "form": []
+            },
+            "auth": {
+                "type": "bearer",
+                "bearer": "<add JWT here>"
+            }
+        },
+        {
+            "_id": "a900aac7-cef0-46c2-9f2c-1e9dcd7b20c4",
+            "colId": "d53f9122-041e-4511-a7fa-17f466be7fb1",
+            "containerId": "ac22faa5-17e1-4ebf-a7cf-07ea1dce1eb7",
+            "name": "Get Orders of a Customer",
+            "url": "http://localhost:3000/api/orders/user/66d7d4382647de9ffe8049ff",
+            "method": "GET",
+            "sortNum": 30000,
+            "created": "2024-09-04T07:20:25.103Z",
+            "modified": "2024-09-04T07:28:16.559Z",
+            "headers": [],
+            "auth": {
+                "type": "bearer",
+                "bearer": "<add JWT here>"
+            }
+        },
+        {
             "_id": "8295f931-8d86-4b4c-abc6-47549c27facc",
             "colId": "d53f9122-041e-4511-a7fa-17f466be7fb1",
             "containerId": "2e00bdf0-9422-4b83-9fa8-32aa0fbbc127",
@@ -112,6 +237,38 @@
                 "raw": "{\n  \"name\": \"iPhone\",\n  \"price\": 100,\n  \"description\": \"Best phone in the world.\"\n}",
                 "form": []
             },
+            "auth": {
+                "type": "bearer",
+                "bearer": "<add JWT here>"
+            }
+        },
+        {
+            "_id": "fe7259c8-143b-4381-8aee-da9ae4292892",
+            "colId": "d53f9122-041e-4511-a7fa-17f466be7fb1",
+            "containerId": "a569901c-649e-4475-9ebc-fbb355dff4b7",
+            "name": "Delete Cart Item",
+            "url": "http://localhost:3000/api/cart/66d7d4382647de9ffe8049ff/items/66d7da5d1e3bdfea504f9319",
+            "method": "DELETE",
+            "sortNum": 40000,
+            "created": "2024-09-04T06:30:11.044Z",
+            "modified": "2024-09-04T07:28:07.077Z",
+            "headers": [],
+            "auth": {
+                "type": "bearer",
+                "bearer": "<add JWT here>"
+            }
+        },
+        {
+            "_id": "0013abea-6a12-4649-90e2-acfb97a1234b",
+            "colId": "d53f9122-041e-4511-a7fa-17f466be7fb1",
+            "containerId": "ac22faa5-17e1-4ebf-a7cf-07ea1dce1eb7",
+            "name": "Get Orders by ID",
+            "url": "http://localhost:3000/api/orders/66d80a19ce76aa283afa911b",
+            "method": "GET",
+            "sortNum": 40000,
+            "created": "2024-09-04T07:21:28.385Z",
+            "modified": "2024-09-04T07:28:19.482Z",
+            "headers": [],
             "auth": {
                 "type": "bearer",
                 "bearer": "<add JWT here>"
@@ -241,5 +398,5 @@
             }
         }
     ],
-    "ref": "cpsK_3AGMk6hvxAYIwiNjpRLPizpWCvoUfNJhh3aVzgM6xwGjUVIdHSOYiUBkrniqgesXYNca4K-o7PmhxyHvw"
+    "ref": "cpsK_3AGMk6hvxAYIwiNjgHqv0VCiOOUdN0Mdgmm4VWCjwwUcV-a4gwqUsPNOmvFTDA0MhNJLQxcNEo5u-1nNg"
 }
