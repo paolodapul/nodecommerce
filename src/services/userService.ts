@@ -10,13 +10,13 @@ type UserData = {
 
 const register = async (userData: UserData) => {
   const { username, email, password } = userData;
+  const hashedPassword = await hashPassword(password);
   const newUser = new User({
     username,
     email,
-    password: await hashPassword(password),
+    password: hashedPassword,
   });
-  await newUser.save();
-  return newUser;
+  return await newUser.save();
 };
 
 const login = async (userData: UserData) => {
