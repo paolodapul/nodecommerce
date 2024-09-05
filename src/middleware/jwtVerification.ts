@@ -13,6 +13,15 @@ const jwtVerification = (
   const headerValue = req.headers["authorization"];
   const token = typeof headerValue === "string" ? headerValue : undefined;
 
+  /**
+   * Find a way to avoid needlessly calling the database
+   * Deny if:
+   * 1. No auth header
+   * 2. No bearer token
+   *
+   * Do all auth-related work in one middleware (jwt and check permission)
+   */
+
   if (!token) {
     return res.status(403).json({ message: "Unauthorized access." });
   }
@@ -23,9 +32,14 @@ const jwtVerification = (
         token.replace("Bearer ", ""),
         process.env.JWT_SECRET
       );
-      req.user = decoded;
+      req.user = decoded; // Include user ID and role in req.user
     }
   } catch (err) {
+    /**
+     * JsonWebTokenError
+     * TokenExpiredError
+     */
+
     console.error(err);
     return res.status(401).json({ message: "Unauthorized access." });
   }
