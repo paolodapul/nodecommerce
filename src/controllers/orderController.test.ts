@@ -8,7 +8,7 @@ import express, {
   Request as ExpressRequest,
   Response,
 } from "express";
-import orderController from "../controllers/orderController";
+import orderController from "./order-controller";
 import OrderService, { OrderData } from "../services/orderService";
 import { IOrder } from "../models/orderModel";
 import mongoose from "mongoose";

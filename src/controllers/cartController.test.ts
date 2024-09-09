@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import request from "supertest";
 import express from "express";
-import cartController from "../controllers/cartController";
+import cartController from "./cart-controller";
 import CartService from "../services/cartService";
 import { ICart } from "../models/cartModel";
 import mongoose from "mongoose";

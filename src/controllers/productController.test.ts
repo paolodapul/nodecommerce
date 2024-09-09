@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import request from "supertest";
 import express from "express";
-import productController from "../controllers/productController";
+import productController from "./product-controller";
 import ProductService from "../services/productService";
 
 jest.mock("../services/productService");

@@ -1,6 +1,6 @@
 import request from "supertest";
 import express from "express";
-import { register, login } from "../controllers/userController";
+import { register, login } from "./user-controller";
 import * as userService from "../services/userService";
 
 jest.mock("../services/userService");
