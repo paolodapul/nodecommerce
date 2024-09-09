@@ -1,16 +1,21 @@
 import mongoose from "mongoose";
 
 export const VALID_PERMISSIONS = [
+  // Product management
   "create_products",
   "view_products",
   "update_products",
   "delete_products",
+  // Order management (admin)
+  "view_any_order",
+  "update_any_order",
+  "cancel_any_order",
+  // Order management (customer)
+  "create_order",
   "view_orders",
   "update_orders",
   "cancel_orders",
-  "create_customer_order",
-  "view_customer_orders",
-  "cancel_customer_orders",
+  // Cart management
   "add_to_cart",
   "view_cart",
   "update_cart",

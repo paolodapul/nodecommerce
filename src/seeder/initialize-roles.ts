@@ -11,9 +11,9 @@ async function initializeRoles() {
         "update_products",
         "delete_products",
         // Order management
-        "view_orders",
-        "update_orders",
-        "cancel_orders",
+        "view_any_order",
+        "update_any_order",
+        "cancel_any_order",
         // Cart management (admin)
         "view_any_cart",
         "modify_any_cart",
@@ -27,9 +27,10 @@ async function initializeRoles() {
         // Product interaction
         "view_products",
         // Order management (customer)
-        "create_customer_order",
-        "view_customer_orders",
-        "cancel_customer_orders",
+        "create_order",
+        "update_order",
+        "view_orders",
+        "cancel_orders",
         // Cart management (customer)
         "view_cart",
         "add_to_cart",
