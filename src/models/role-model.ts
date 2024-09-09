@@ -11,6 +11,10 @@ export const VALID_PERMISSIONS = [
   "create_customer_order",
   "view_customer_orders",
   "cancel_customer_orders",
+  "add_to_cart",
+  "view_cart",
+  "update_cart",
+  "remove_from_cart",
 ] as const;
 
 export type Permission = (typeof VALID_PERMISSIONS)[number];
