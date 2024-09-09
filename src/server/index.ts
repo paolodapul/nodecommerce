@@ -1,9 +1,8 @@
 import express, { Express, Request, Response } from "express";
 import helmet from "helmet";
-import { corsMiddleware as cors, jwtVerification } from "../middleware";
+import { corsMiddleware as cors } from "../middleware";
 import errorHandler from "../middleware/error-handler";
-import publicRoutes from "../routes/public";
-import privateRoutes from "../routes/private";
+import routes from "../routes";
 
 function createApp(ENV: string) {
   const app: Express = express();
@@ -16,9 +15,7 @@ function createApp(ENV: string) {
     res.send(`Welcome to Nodecommerce - ${ENV}`);
   });
 
-  app.use("/api", publicRoutes);
-  app.use("/api", jwtVerification);
-  app.use("/api", privateRoutes);
+  app.use("/api", routes);
   app.use(errorHandler);
 
   return app;

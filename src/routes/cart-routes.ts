@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
 /* eslint-disable @typescript-eslint/unbound-method */
 import express from "express";
-import cartController from "../../controllers/cart-controller";
+import cartController from "../controllers/cart-controller";
 
 const router = express.Router();
 
