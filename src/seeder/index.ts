@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
-import { initializeRoles } from "./initializeRoles";
+import { initializeRoles } from "./initialize-roles";
 import dotenv from "dotenv";
-import { initializeUsers } from "./initializeUsers";
+import { initializeUsers } from "./initialize-users";
 
 const ENV = process.env.NODE_ENV ?? "development";
 dotenv.config({ path: `.env.${ENV}` });
