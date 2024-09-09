@@ -39,17 +39,26 @@ describe("verifyToken middleware", () => {
       .set("Authorization", `Bearer ${token}`);
 
     expect(response.status).toBe(401);
-    expect((response.body as ResponseBody).message).toBe(
-      "Unauthorized access."
-    );
+    expect((response.body as ResponseBody).message).toBe("Invalid token.");
   });
 
   it("should deny access with no token", async () => {
     const response = await request(app).get("/protected");
 
-    expect(response.status).toBe(403);
+    expect(response.status).toBe(401);
     expect((response.body as ResponseBody).message).toBe(
-      "Unauthorized access."
+      "Authentication failed."
+    );
+  });
+
+  it("should deny access with Auth header but no token", async () => {
+    const response = await request(app)
+      .get("/protected")
+      .set("Authorization", `Bearer `);
+
+    expect(response.status).toBe(401);
+    expect((response.body as ResponseBody).message).toBe(
+      "Authentication failed."
     );
   });
 
@@ -62,8 +71,6 @@ describe("verifyToken middleware", () => {
       .set("Authorization", `Bearer ${token}`);
 
     expect(response.status).toBe(401);
-    expect((response.body as ResponseBody).message).toBe(
-      "Unauthorized access."
-    );
+    expect((response.body as ResponseBody).message).toBe("Token has expired.");
   });
 });
