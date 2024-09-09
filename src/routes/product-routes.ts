@@ -2,15 +2,28 @@
 /* eslint-disable @typescript-eslint/unbound-method */
 import express from "express";
 import productController from "../controllers/product-controller";
+import { jwtVerification } from "../middleware";
 
 const router = express.Router();
-
-router.post("/", productController.createProduct);
-router.put("/:id", productController.updateProduct);
-router.delete("/:id", productController.deleteProduct);
 
 // Public
 router.get("/", productController.getAllProducts);
 router.get("/:id", productController.getProductById);
+
+router.post(
+  "/",
+  jwtVerification("create_products"),
+  productController.createProduct
+);
+router.put(
+  "/:id",
+  jwtVerification("update_products"),
+  productController.updateProduct
+);
+router.delete(
+  "/:id",
+  jwtVerification("delete_products"),
+  productController.deleteProduct
+);
 
 export default router;
