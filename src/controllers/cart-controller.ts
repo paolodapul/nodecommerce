@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import CartService from "../services/cartService";
-import { ICartItem } from "../models/cartModel";
+import { ICartItem } from "../models/cart-model";
 
 export type CreateCartItemBody = Omit<ICartItem, "id">;
 type UpdateProductBody = Partial<CreateCartItemBody>;

@@ -1,5 +1,5 @@
-import { Role } from "../models/roleModel";
-import { User } from "../models/userModel";
+import { Role } from "../models/role-model";
+import { User } from "../models/user-model";
 
 import { hashPassword } from "../utils/hashing";
 

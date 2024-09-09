@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { Role } from "../models/roleModel";
+import { Role } from "../models/role-model";
 
 interface CustomRequest extends Request {
   user?: {

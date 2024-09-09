@@ -2,10 +2,10 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import { Types } from "mongoose";
 import productService from "../services/productService";
-import { Product } from "../models/productModel";
+import { Product } from "../models/product-model";
 
 // Mock the Product model
-jest.mock("../models/productModel");
+jest.mock("../models/product-model");
 
 describe("ProductService", () => {
   beforeEach(() => {

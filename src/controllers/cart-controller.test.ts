@@ -4,7 +4,7 @@ import request from "supertest";
 import express from "express";
 import cartController from "./cart-controller";
 import CartService from "../services/cartService";
-import { ICart } from "../models/cartModel";
+import { ICart } from "../models/cart-model";
 import mongoose from "mongoose";
 
 jest.mock("../services/cartService");

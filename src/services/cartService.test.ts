@@ -2,11 +2,11 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { Types } from "mongoose";
 import CartService from "./cartService";
-import Cart, { ICart } from "../models/cartModel";
-import { Product } from "../models/productModel";
+import Cart, { ICart } from "../models/cart-model";
+import { Product } from "../models/product-model";
 
-jest.mock("../models/cartModel");
-jest.mock("../models/productModel");
+jest.mock("../models/cart-model");
+jest.mock("../models/product-model");
 
 describe("CartService", () => {
   beforeEach(() => {

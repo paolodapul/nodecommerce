@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/unbound-method */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unsafe-return */
-import { User } from "../models/userModel";
+import { User } from "../models/user-model";
 import { register, login } from "./userService";
 import * as hashing from "../utils/hashing";
 import jwt from "jsonwebtoken";
 
-jest.mock("../models/userModel");
+jest.mock("../models/user-model");
 jest.mock("../utils/hashing");
 jest.mock("jsonwebtoken");
 

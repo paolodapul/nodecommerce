@@ -4,10 +4,10 @@
 import { Types } from "mongoose";
 import orderService from "../services/orderService";
 import cartService from "../services/cartService";
-import { Order } from "../models/orderModel";
+import { Order } from "../models/order-model";
 
 // Mock the Order model and cartService
-jest.mock("../models/orderModel");
+jest.mock("../models/order-model");
 jest.mock("../services/cartService");
 
 describe("OrderService", () => {

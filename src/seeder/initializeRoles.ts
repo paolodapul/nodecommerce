@@ -1,4 +1,4 @@
-import { Role } from "../models/roleModel";
+import { Role } from "../models/role-model";
 
 async function initializeRoles() {
   const roles = [

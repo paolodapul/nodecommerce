@@ -1,6 +1,6 @@
 import { Types } from "mongoose";
-import Cart, { ICart, ICartItem } from "../models/cartModel";
-import { Product } from "../models/productModel";
+import Cart, { ICart, ICartItem } from "../models/cart-model";
+import { Product } from "../models/product-model";
 
 class CartService {
   async getCart(userId: string): Promise<ICart> {
