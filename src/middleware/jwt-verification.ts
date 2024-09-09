@@ -27,10 +27,6 @@ const jwtVerification = (requiredPermission: Permission) => {
       return res.status(401).json({ message: "Authentication failed." });
     }
 
-    /**
-     * Do all auth-related work in one middleware (jwt and check permission)
-     */
-
     try {
       if (process.env.JWT_SECRET && token) {
         // Check if token is valid
