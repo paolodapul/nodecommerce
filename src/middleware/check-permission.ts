@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { Role } from "../models/role-model";
+import { Permission, Role } from "../models/role-model";
 
 interface CustomRequest extends Request {
   user?: {
@@ -7,7 +7,7 @@ interface CustomRequest extends Request {
   };
 }
 
-function checkPermission(requiredPermission: string) {
+function checkPermission(requiredPermission: Permission) {
   return async (req: CustomRequest, res: Response, next: NextFunction) => {
     const userRole = req.user?.role;
     const role = await Role.findById(userRole);
