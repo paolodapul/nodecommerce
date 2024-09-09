@@ -28,24 +28,22 @@ const roleSchema = new mongoose.Schema({
     unique: true,
     trim: true,
   },
-  permissions: [
-    {
-      type: [String],
-      enum: VALID_PERMISSIONS,
-      required: true,
-      validate: [
-        {
-          validator: (array: Permission[]) => array.length > 0,
-          message: "At least one permission is required.",
-        },
-        {
-          validator: (array: Permission[]) =>
-            array.every((v) => VALID_PERMISSIONS.includes(v)),
-          message: "Invalid permission value.",
-        },
-      ],
-    },
-  ],
+  permissions: {
+    type: [String],
+    enum: VALID_PERMISSIONS,
+    required: true,
+    validate: [
+      {
+        validator: (array: Permission[]) => array.length > 0,
+        message: "At least one permission is required.",
+      },
+      {
+        validator: (array: Permission[]) =>
+          array.every((v) => VALID_PERMISSIONS.includes(v)),
+        message: "Invalid permission value.",
+      },
+    ],
+  },
   description: {
     type: String,
     trim: true,
