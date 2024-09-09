@@ -6,6 +6,7 @@ import jwt, {
 } from "jsonwebtoken";
 import { Role } from "../models/role-model";
 import { User } from "../models/user-model";
+import mongoose from "mongoose";
 
 interface AuthPayload extends JwtPayload {
   id?: string;
@@ -42,13 +43,17 @@ const jwtVerification = async (
         process.env.JWT_SECRET
       ) as AuthPayload;
 
-      // Initialize req.user
-      req.user = {
-        id: "",
-        role: "",
-      };
+      // Check validity of user and role IDs to prevent injection attacks
+      if (decodedJwt.id && decodedJwt.role) {
+        const isUserIdValid = mongoose.Types.ObjectId.isValid(decodedJwt.id);
+        const isRoleIdValid = mongoose.Types.ObjectId.isValid(decodedJwt.role);
 
-      // Compare user and role against the database to check if valid
+        if (!isUserIdValid || !isRoleIdValid) {
+          throw new Error("Invalid object ID provided.");
+        }
+      }
+
+      // Compare user and role against the database to check if IDs exist
       const user = await User.findById(decodedJwt.id);
       if (!user) {
         throw new Error("User not found.");
@@ -58,6 +63,12 @@ const jwtVerification = async (
       if (!role) {
         throw new Error("Role is invalid.");
       }
+
+      // Initialize req.user
+      req.user = {
+        id: "",
+        role: "",
+      };
 
       // If token is valid, include user ID and role in req.user
       req.user.id = decodedJwt.id;
