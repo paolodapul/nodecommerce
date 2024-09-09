@@ -30,8 +30,6 @@ const jwtVerification = async (
   }
 
   /**
-   * Find a way to avoid needlessly calling the database
-   *
    * Do all auth-related work in one middleware (jwt and check permission)
    */
 
