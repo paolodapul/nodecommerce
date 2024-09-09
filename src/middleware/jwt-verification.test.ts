@@ -1,7 +1,9 @@
+/* eslint-disable @typescript-eslint/no-misused-promises */
 import request from "supertest";
-import express, { Express } from "express";
+import express, { Express, Response } from "express";
 import jwt from "jsonwebtoken";
 import { jwtVerification } from "./jwt-verification";
+import { CustomRequest } from "./jwt-verification";
 
 type ResponseBody = {
   message: string;
@@ -13,10 +15,11 @@ const JWT_SECRET = "test-secret";
 beforeEach(() => {
   app = express();
   app.use(express.json());
+  app.use(jwtVerification("view_products"));
   process.env.JWT_SECRET = JWT_SECRET;
 
   // Mock protected route
-  app.get("/protected", jwtVerification, (req, res) => {
+  app.get("/protected", (req: CustomRequest, res: Response) => {
     res.json({ message: "Access granted" });
   });
 });
