@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import OrderService, {
   OrderData,
   OrderUpdateData,
-} from "../services/orderService";
+} from "../services/order-service";
 import { IOrder } from "../models/order-model";
 
 interface CreateOrderRequest extends Request {

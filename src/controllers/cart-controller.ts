@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import CartService from "../services/cartService";
+import CartService from "../services/cart-service";
 import { ICartItem } from "../models/cart-model";
 
 export type CreateCartItemBody = Omit<ICartItem, "id">;

@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/unbound-method */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import { Types } from "mongoose";
-import productService from "../services/productService";
+import productService from "./product-service";
 import { Product } from "../models/product-model";
 
 // Mock the Product model

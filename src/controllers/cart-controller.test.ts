@@ -3,11 +3,11 @@
 import request from "supertest";
 import express from "express";
 import cartController from "./cart-controller";
-import CartService from "../services/cartService";
+import CartService from "../services/cart-service";
 import { ICart } from "../models/cart-model";
 import mongoose from "mongoose";
 
-jest.mock("../services/cartService");
+jest.mock("../services/cart-service");
 
 const app = express();
 app.use(express.json());

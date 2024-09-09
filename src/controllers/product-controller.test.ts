@@ -3,9 +3,9 @@
 import request from "supertest";
 import express from "express";
 import productController from "./product-controller";
-import ProductService from "../services/productService";
+import ProductService from "../services/product-service";
 
-jest.mock("../services/productService");
+jest.mock("../services/product-service");
 
 const app = express();
 app.use(express.json());

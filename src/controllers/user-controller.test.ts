@@ -1,9 +1,9 @@
 import request from "supertest";
 import express from "express";
 import { register, login } from "./user-controller";
-import * as userService from "../services/userService";
+import * as userService from "../services/user-service";
 
-jest.mock("../services/userService");
+jest.mock("../services/user-service");
 
 const app = express();
 app.use(express.json());

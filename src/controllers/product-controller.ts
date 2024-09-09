@@ -1,7 +1,7 @@
 // controllers/product.controller.ts
 import { Request, Response } from "express";
-import ProductService from "../services/productService";
-import { IProduct } from "../services/productService";
+import ProductService from "../services/product-service";
+import { IProduct } from "../services/product-service";
 
 export type CreateProductBody = Omit<IProduct, "id">;
 type UpdateProductBody = Partial<CreateProductBody>;

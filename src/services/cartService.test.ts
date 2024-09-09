@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/unbound-method */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { Types } from "mongoose";
-import CartService from "./cartService";
+import CartService from "./cart-service";
 import Cart, { ICart } from "../models/cart-model";
 import { Product } from "../models/product-model";
 

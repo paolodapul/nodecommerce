@@ -1,5 +1,5 @@
 import { NextFunction, Request, RequestHandler, Response } from "express";
-import * as userService from "../services/userService";
+import * as userService from "../services/user-service";
 
 type User = {
   username: string;

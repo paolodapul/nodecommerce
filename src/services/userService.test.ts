@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 import { User } from "../models/user-model";
-import { register, login } from "./userService";
+import { register, login } from "./user-service";
 import * as hashing from "../utils/hashing";
 import jwt from "jsonwebtoken";
 

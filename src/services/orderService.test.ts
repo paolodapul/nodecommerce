@@ -2,13 +2,13 @@
 /* eslint-disable @typescript-eslint/unbound-method */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import { Types } from "mongoose";
-import orderService from "../services/orderService";
-import cartService from "../services/cartService";
+import orderService from "./order-service";
+import cartService from "./cart-service";
 import { Order } from "../models/order-model";
 
 // Mock the Order model and cartService
 jest.mock("../models/order-model");
-jest.mock("../services/cartService");
+jest.mock("../services/cart-service");
 
 describe("OrderService", () => {
   beforeEach(() => {

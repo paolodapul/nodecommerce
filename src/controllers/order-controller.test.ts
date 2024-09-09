@@ -9,11 +9,11 @@ import express, {
   Response,
 } from "express";
 import orderController from "./order-controller";
-import OrderService, { OrderData } from "../services/orderService";
+import OrderService, { OrderData } from "../services/order-service";
 import { IOrder } from "../models/order-model";
 import mongoose from "mongoose";
 
-jest.mock("../services/orderService");
+jest.mock("../services/order-service");
 
 const app = express();
 app.use(express.json());
