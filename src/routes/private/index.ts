@@ -1,7 +1,7 @@
 import express from "express";
-import productRoutes from "./productRoutes";
-import cartRoutes from "./cartRoutes";
-import orderRoutes from "./orderRoutes";
+import productRoutes from "./product-routes";
+import cartRoutes from "./cart-routes";
+import orderRoutes from "./order-routes";
 
 const router = express.Router();
 router.use("/products", productRoutes);
