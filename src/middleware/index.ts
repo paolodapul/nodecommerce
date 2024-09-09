@@ -1,3 +1,3 @@
-export * from "./errorHandler";
+export * from "./error-handler";
 export * from "./cors";
-export * from "./jwtVerification";
+export * from "./jwt-verification";

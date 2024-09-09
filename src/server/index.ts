@@ -1,10 +1,7 @@
 import express, { Express, Request, Response } from "express";
 import helmet from "helmet";
-import {
-  errorHandler,
-  corsMiddleware as cors,
-  jwtVerification,
-} from "../middleware";
+import { corsMiddleware as cors, jwtVerification } from "../middleware";
+import errorHandler from "../middleware/error-handler";
 import publicRoutes from "../routes/public";
 import privateRoutes from "../routes/private";
 

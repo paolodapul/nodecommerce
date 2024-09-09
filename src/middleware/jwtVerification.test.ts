@@ -1,7 +1,7 @@
 import request from "supertest";
 import express, { Express } from "express";
 import jwt from "jsonwebtoken";
-import { jwtVerification } from "./jwtVerification";
+import { jwtVerification } from "./jwt-verification";
 
 type ResponseBody = {
   message: string;

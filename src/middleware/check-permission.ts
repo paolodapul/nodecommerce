@@ -24,4 +24,4 @@ function checkPermission(requiredPermission: string) {
   };
 }
 
-export { checkPermission };
+export default checkPermission;

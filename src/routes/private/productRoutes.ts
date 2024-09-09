@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/unbound-method */
 import express from "express";
 import productController from "../../controllers/product-controller";
-import { checkPermission } from "../../middleware/checkPermission";
+import checkPermission from "../../middleware/check-permission";
 
 const router = express.Router();
 
