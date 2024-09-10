@@ -1,6 +1,7 @@
 services:
   app:
     image: ghcr.io/paolodapul/nodecommerce-amd64:latest
+    pull_policy: always
     ports:
       - 4000:4000
     env_file:

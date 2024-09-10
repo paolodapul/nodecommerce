@@ -18,4 +18,4 @@ USER node
 EXPOSE 4000
 ENTRYPOINT ["/sbin/tini", "--"]
 ENV NODE_ENV=production
-CMD ["pm2-runtime", "start", "dist/index.js"]
+CMD ["pm2-runtime", "start", "dist/index.js", "--env", "production"]
