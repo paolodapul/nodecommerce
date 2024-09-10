@@ -11,9 +11,9 @@ const app = createApp(ENV);
 
 void (async () => await connectMongoDB())();
 
-const server = app.listen(port, () => {
+const server = app.listen(port as number, "0.0.0.0", () => {
   console.log(
-    `[server]: Server is running at http://localhost:${port as string}`
+    `[server]: Server is running at http://0.0.0.0:${port as string}`
   );
 });
 
