@@ -12,7 +12,7 @@ RUN apk add --no-cache tini
 WORKDIR /app
 COPY --from=builder /app/package*.json ./
 COPY --from=builder /app/dist ./dist
-RUN npm ci --only=production
+RUN npm install
 RUN npm install pm2 -g
 USER node
 EXPOSE 4000
