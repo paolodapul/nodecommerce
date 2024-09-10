@@ -2,7 +2,7 @@ import cors, { CorsOptions } from "cors";
 
 const ENV = process.env.NODE_ENV ?? "development";
 
-const whitelist = ["https://prod.example.com"];
+const whitelist = [process.env.EC2_PUBLIC_DNS];
 const corsCondition = (origin: string | undefined) => {
   return ENV !== "production"
     ? !origin || whitelist.includes(origin)
