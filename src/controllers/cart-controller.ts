@@ -67,6 +67,26 @@ export async function addToCart(
   }
 }
 
+export async function updateCartItem(
+  userId: string,
+  productId: string,
+  quantity: number
+): Promise<void> {
+  const cart = await getCart(userId);
+  if (!cart) throw new Error("Cart not found");
+
+  const item = cart.items.find((i) => i.productId.toString() === productId);
+  if (!item) throw new Error("Item not found in cart");
+
+  const quantityDiff = quantity - item.quantity;
+  const amountDiff = quantityDiff * item.price;
+
+  item.quantity = quantity;
+  cart.totalAmount += amountDiff;
+
+  await cart.save();
+}
+
 class CartController {
   async addToCart(
     req: Request<{ userId: string }, object, CreateCartItemBody>,
@@ -108,7 +128,7 @@ class CartController {
     try {
       const { userId, productId } = req.params;
       const { quantity } = req.body;
-      await CartService.updateCartItem(userId, productId, quantity as number);
+      await updateCartItem(userId, productId, quantity as number);
       res.json({ message: "Cart item updated" });
     } catch (error) {
       res.status(500).json({
