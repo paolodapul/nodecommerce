@@ -1,5 +1,4 @@
-import { Product } from "../models/product-model";
-import { Category } from "../models/category-model";
+import { Product, Category } from "../models/product-model";
 
 async function initializeProducts() {
   try {
