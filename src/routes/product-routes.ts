@@ -26,4 +26,10 @@ router.delete(
   productController.deleteProduct
 );
 
+router.post(
+  "/:id/reviews",
+  jwtVerification("create_review"),
+  productController.addReview
+);
+
 export default router;

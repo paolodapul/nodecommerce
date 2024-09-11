@@ -33,6 +33,12 @@ interface PriceFilter {
   $lte?: number;
 }
 
+interface AuthRequest extends Request {
+  user?: {
+    id: string;
+  };
+}
+
 export type CreateProductBody = Omit<IProduct, "id">;
 type UpdateProductBody = Partial<CreateProductBody>;
 
@@ -156,6 +162,40 @@ class ProductController {
       }
     } catch (error) {
       res.status(500).json({ message: (error as Error).message });
+    }
+  }
+
+  async addReview(req: AuthRequest, res: Response) {
+    try {
+      const { id } = req.params;
+      const { message, rating } = req.body as {
+        message: string;
+        rating: number;
+      };
+      const userId = req.user?.id;
+
+      if (!userId) {
+        return res.status(401).json({ message: "User not authenticated" });
+      }
+
+      const product = await Product.findById(id);
+
+      if (!product) {
+        return res.status(404).json({ message: "Product not found" });
+      }
+
+      const review = {
+        user: new Types.ObjectId(userId),
+        message,
+        rating,
+      };
+
+      product.reviews.push(review);
+      await product.save();
+
+      res.status(201).json(product);
+    } catch (error) {
+      res.status(400).json({ message: (error as Error).message });
     }
   }
 }
