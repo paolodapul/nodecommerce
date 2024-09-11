@@ -1,7 +1,7 @@
 // controllers/product.controller.ts
 import { Request, Response } from "express";
 import { Document, FilterQuery, Types } from "mongoose";
-import { Product } from "../models/product-model";
+import { Category, Product } from "../models/product-model";
 
 export interface IProduct extends Document {
   name: string;
@@ -26,6 +26,11 @@ export interface IProductService {
     updateData: ProductUpdateData
   ): Promise<IProduct | null>;
   deleteProduct(id: ProductId): Promise<IProduct | null>;
+}
+
+interface PriceFilter {
+  $gte?: number;
+  $lte?: number;
 }
 
 export type CreateProductBody = Omit<IProduct, "id">;
@@ -53,6 +58,9 @@ class ProductController {
         limit = 10,
         sortBy = "name",
         sortOrder = "asc",
+        category,
+        minPrice,
+        maxPrice,
       } = req.query;
 
       const pageNum = Number(page);
@@ -70,13 +78,30 @@ class ProductController {
         ];
       }
 
+      if (category) {
+        const categoryDoc = await Category.findOne({ name: category });
+
+        if (categoryDoc) {
+          filter.category = categoryDoc._id;
+        } else {
+          return res.status(400).json({ message: "Invalid category" });
+        }
+      }
+
+      if (minPrice || maxPrice) {
+        const priceFilter: PriceFilter = {};
+        if (minPrice) priceFilter.$gte = Number(minPrice);
+        if (maxPrice) priceFilter.$lte = Number(maxPrice);
+        filter.price = priceFilter;
+      }
+
       const products = await Product.find(filter)
         .populate("category", "name")
         .sort(sort)
         .skip(skip)
         .limit(limitNum);
 
-      const total = await Product.countDocuments();
+      const total = await Product.countDocuments(filter);
       const totalPages = Math.ceil(total / limitNum);
 
       res.json({
