@@ -1,9 +1,71 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { Request, Response } from "express";
 import CartService from "../services/cart-service";
-import { ICartItem } from "../models/cart-model";
+import { Product } from "../models/product-model";
+import Cart, { ICart, ICartItem } from "../models/cart-model";
+import { Types } from "mongoose";
 
 export type CreateCartItemBody = Omit<ICartItem, "id">;
 type UpdateProductBody = Partial<CreateCartItemBody>;
+
+export async function getCart(userId: string): Promise<ICart> {
+  if (!userId || !Types.ObjectId.isValid(userId)) {
+    throw new Error("Invalid user ID");
+  }
+
+  try {
+    let cart = await Cart.findOne({ userId: new Types.ObjectId(userId) });
+
+    if (!cart) {
+      // If no cart exists, create a new empty cart
+      cart = new Cart({
+        userId: new Types.ObjectId(userId),
+        items: [],
+        totalAmount: 0,
+      });
+      await cart.save();
+    }
+
+    return cart;
+  } catch (error) {
+    // Log the error for debugging purposes
+    console.error("Error in getCart:", error);
+    throw new Error("Failed to retrieve cart");
+  }
+}
+
+export async function addToCart(
+  userId: string,
+  item: Omit<ICartItem, "price">
+): Promise<void> {
+  const product = await Product.findById(item.productId);
+  if (!product) {
+    throw new Error("Product not found");
+  }
+
+  const cart = await getCart(userId);
+  if (cart) {
+    const existingItem = cart.items.find(
+      (i: { productId: { toString: () => string } }) =>
+        i.productId.toString() === item.productId.toString()
+    );
+    if (existingItem) {
+      existingItem.quantity += item.quantity;
+    } else {
+      cart.items.push({ ...item, price: product.price });
+    }
+    cart.totalAmount += product.price * item.quantity;
+    await cart.save();
+  } else {
+    await Cart.create({
+      userId: new Types.ObjectId(userId),
+      items: [{ ...item, price: product.price }],
+      totalAmount: product.price * item.quantity,
+    });
+  }
+}
 
 class CartController {
   async addToCart(
@@ -13,7 +75,7 @@ class CartController {
     try {
       const userId = req.params.userId;
       const item = req.body;
-      await CartService.addToCart(userId, item);
+      await addToCart(userId, item);
       res.status(201).json({ message: "Item added to cart" });
     } catch (error) {
       res.status(500).json({
@@ -25,7 +87,7 @@ class CartController {
 
   async getCart(req: Request, res: Response): Promise<void> {
     try {
-      const cart = await CartService.getCart(req.params.userId);
+      const cart = await getCart(req.params.userId);
       res.json(cart);
     } catch (error) {
       res.status(500).json({
