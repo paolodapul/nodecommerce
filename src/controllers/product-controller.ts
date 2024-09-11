@@ -47,8 +47,30 @@ class ProductController {
 
   async getAllProducts(req: Request, res: Response) {
     try {
-      const products = await Product.find();
-      res.json(products);
+      const { page = 1, limit = 2 } = req.query;
+
+      const pageNum = Number(page);
+      const limitNum = Number(limit);
+
+      // Calculate skip value for pagination
+      const skip = (pageNum - 1) * limitNum;
+
+      // Execute query with pagination
+      const products = await Product.find().skip(skip).limit(limitNum);
+
+      // Get total count of matching documents
+      const total = await Product.countDocuments();
+
+      // Calculate total pages
+      const totalPages = Math.ceil(total / limitNum);
+
+      // const products = await Product.find();
+      res.json({
+        products,
+        currentPage: pageNum,
+        totalPages,
+        totalProducts: total,
+      });
     } catch (error) {
       res.status(500).json({ message: (error as Error).message });
     }
