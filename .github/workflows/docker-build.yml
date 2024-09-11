@@ -41,5 +41,6 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
 
       - name: Trigger deployment
+        continue-on-error: true
         run: |
           curl -X POST ${{ secrets.EC2_WEBHOOK }}/hooks/redeploy
