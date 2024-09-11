@@ -39,3 +39,7 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+
+      - name: Trigger deployment
+        run: |
+          curl -X POST ${{ secrets.EC2_WEBHOOK }}/hooks/redeploy
