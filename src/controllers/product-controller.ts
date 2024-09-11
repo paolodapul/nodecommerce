@@ -50,7 +50,7 @@ class ProductController {
       const {
         q,
         page = 1,
-        limit = 2,
+        limit = 10,
         sortBy = "name",
         sortOrder = "asc",
       } = req.query;
