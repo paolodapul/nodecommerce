@@ -1,10 +1,59 @@
 // controllers/product.controller.ts
 import { Request, Response } from "express";
-import ProductService from "../services/product-service";
-import { IProduct } from "../services/product-service";
+import { Document, Types } from "mongoose";
+import { Product } from "../models/product-model";
+
+export interface IProduct extends Document {
+  name: string;
+  price: number;
+  description?: string | null;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export type ProductData = Pick<IProduct, "name" | "price" | "description">;
+
+export type ProductId = string | Types.ObjectId;
+
+export type ProductUpdateData = Partial<ProductData>;
+
+export interface IProductService {
+  createProduct(productData: ProductData): Promise<IProduct>;
+  getAllProducts(): Promise<IProduct[]>;
+  getProductById(id: ProductId): Promise<IProduct | null>;
+  updateProduct(
+    id: ProductId,
+    updateData: ProductUpdateData
+  ): Promise<IProduct | null>;
+  deleteProduct(id: ProductId): Promise<IProduct | null>;
+}
 
 export type CreateProductBody = Omit<IProduct, "id">;
 type UpdateProductBody = Partial<CreateProductBody>;
+
+async function createProduct(productData: ProductData): Promise<IProduct> {
+  const product = new Product(productData);
+  return await product.save();
+}
+
+async function getAllProducts(): Promise<IProduct[]> {
+  return await Product.find();
+}
+
+async function getProductById(id: ProductId): Promise<IProduct | null> {
+  return await Product.findById(id);
+}
+
+async function updateProduct(
+  id: ProductId,
+  updateData: ProductUpdateData
+): Promise<IProduct | null> {
+  return await Product.findByIdAndUpdate(id, updateData, { new: true });
+}
+
+async function deleteProduct(id: ProductId): Promise<IProduct | null> {
+  return await Product.findByIdAndDelete(id);
+}
 
 class ProductController {
   async createProduct(
@@ -12,7 +61,7 @@ class ProductController {
     res: Response
   ) {
     try {
-      const product = await ProductService.createProduct(req.body);
+      const product = await createProduct(req.body);
       res.status(201).json(product);
     } catch (error) {
       res.status(400).json({ message: (error as Error).message });
@@ -21,7 +70,7 @@ class ProductController {
 
   async getAllProducts(req: Request, res: Response) {
     try {
-      const products = await ProductService.getAllProducts();
+      const products = await getAllProducts();
       res.json(products);
     } catch (error) {
       res.status(500).json({ message: (error as Error).message });
@@ -30,7 +79,7 @@ class ProductController {
 
   async getProductById(req: Request<{ id: string }>, res: Response) {
     try {
-      const product = await ProductService.getProductById(req.params.id);
+      const product = await getProductById(req.params.id);
       if (product) {
         res.json(product);
       } else {
@@ -46,10 +95,7 @@ class ProductController {
     res: Response
   ) {
     try {
-      const product = await ProductService.updateProduct(
-        req.params.id,
-        req.body
-      );
+      const product = await updateProduct(req.params.id, req.body);
       if (product) {
         res.json(product);
       } else {
@@ -62,7 +108,7 @@ class ProductController {
 
   async deleteProduct(req: Request<{ id: string }>, res: Response) {
     try {
-      const product = await ProductService.deleteProduct(req.params.id);
+      const product = await deleteProduct(req.params.id);
       if (product) {
         res.json({ message: "Product deleted successfully" });
       } else {
