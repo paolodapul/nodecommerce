@@ -1,6 +1,8 @@
 import { Role } from "../models/role-model";
 
 async function initializeRoles() {
+  await Role.deleteMany({});
+
   const roles = [
     {
       name: "admin",
