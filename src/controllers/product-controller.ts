@@ -1,6 +1,6 @@
 // controllers/product.controller.ts
 import { Request, Response } from "express";
-import { Document, Types } from "mongoose";
+import { Document, FilterQuery, Types } from "mongoose";
 import { Product } from "../models/product-model";
 
 export interface IProduct extends Document {
@@ -48,6 +48,7 @@ class ProductController {
   async getAllProducts(req: Request, res: Response) {
     try {
       const {
+        q,
         page = 1,
         limit = 2,
         sortBy = "name",
@@ -58,12 +59,18 @@ class ProductController {
       const limitNum = Number(limit);
       const skip = (pageNum - 1) * limitNum;
 
-      // Create sort object
       const sort: { [key: string]: 1 | -1 } = {};
       sort[sortBy as string] = sortOrder === "asc" ? 1 : -1;
 
-      // Execute query with pagination
-      const products = await Product.find()
+      const filter: FilterQuery<typeof Product> = {};
+      if (typeof q === "string" && q.trim() !== "") {
+        filter.$or = [
+          { name: { $regex: q, $options: "i" } },
+          { description: { $regex: q, $options: "i" } },
+        ];
+      }
+
+      const products = await Product.find(filter)
         .sort(sort)
         .skip(skip)
         .limit(limitNum);
@@ -71,7 +78,6 @@ class ProductController {
       const total = await Product.countDocuments();
       const totalPages = Math.ceil(total / limitNum);
 
-      // const products = await Product.find();
       res.json({
         products,
         currentPage: pageNum,
