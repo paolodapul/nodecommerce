@@ -12,7 +12,7 @@ function createApp(ENV: string) {
   app.use(express.json());
 
   app.get("/", (req: Request, res: Response) => {
-    res.send(`Welcome to Nodecommerce with CI v2! - ${ENV}`);
+    res.send(`Welcome to Nodecommerce! - ${ENV}`);
   });
 
   app.use("/api", routes);
