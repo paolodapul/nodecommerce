@@ -31,13 +31,6 @@ export interface IProductService {
 export type CreateProductBody = Omit<IProduct, "id">;
 type UpdateProductBody = Partial<CreateProductBody>;
 
-async function updateProduct(
-  id: ProductId,
-  updateData: ProductUpdateData
-): Promise<IProduct | null> {
-  return await Product.findByIdAndUpdate(id, updateData, { new: true });
-}
-
 async function deleteProduct(id: ProductId): Promise<IProduct | null> {
   return await Product.findByIdAndDelete(id);
 }
@@ -83,7 +76,9 @@ class ProductController {
     res: Response
   ) {
     try {
-      const product = await updateProduct(req.params.id, req.body);
+      const product = await Product.findByIdAndUpdate(req.params.id, req.body, {
+        new: true,
+      });
       if (product) {
         res.json(product);
       } else {
