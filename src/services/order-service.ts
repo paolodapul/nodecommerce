@@ -1,6 +1,6 @@
 import { Document, Types } from "mongoose";
 import { Order, IOrder, IOrderItem } from "../models/order-model";
-import cartService from "./cart-service";
+import { getCart } from "../controllers/cart-controller";
 
 export interface IOrderDocument extends IOrder, Document {}
 
@@ -36,7 +36,7 @@ export interface IOrderService {
 class OrderService implements IOrderService {
   async createOrder(orderData: OrderData): Promise<IOrderDocument> {
     // Fetch user cart
-    const { items } = await cartService.getCart(orderData.userId as string);
+    const { items } = await getCart(orderData.userId as string);
 
     const totalAmount = items.reduce(
       (sum, item) => sum + item.price * item.quantity,
