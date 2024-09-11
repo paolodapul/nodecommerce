@@ -6,6 +6,7 @@ export const VALID_PERMISSIONS = [
   "view_products",
   "update_products",
   "delete_products",
+  "create_review",
   // Order management (admin)
   "view_any_order",
   "update_any_order",

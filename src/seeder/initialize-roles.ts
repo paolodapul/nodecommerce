@@ -28,6 +28,7 @@ async function initializeRoles() {
       permissions: [
         // Product interaction
         "view_products",
+        "create_review",
         // Order management (customer)
         "create_order",
         "update_order",
