@@ -71,6 +71,7 @@ class ProductController {
       }
 
       const products = await Product.find(filter)
+        .populate("category", "name")
         .sort(sort)
         .skip(skip)
         .limit(limitNum);
