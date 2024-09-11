@@ -47,21 +47,28 @@ class ProductController {
 
   async getAllProducts(req: Request, res: Response) {
     try {
-      const { page = 1, limit = 2 } = req.query;
+      const {
+        page = 1,
+        limit = 2,
+        sortBy = "name",
+        sortOrder = "asc",
+      } = req.query;
 
       const pageNum = Number(page);
       const limitNum = Number(limit);
-
-      // Calculate skip value for pagination
       const skip = (pageNum - 1) * limitNum;
 
+      // Create sort object
+      const sort: { [key: string]: 1 | -1 } = {};
+      sort[sortBy as string] = sortOrder === "asc" ? 1 : -1;
+
       // Execute query with pagination
-      const products = await Product.find().skip(skip).limit(limitNum);
+      const products = await Product.find()
+        .sort(sort)
+        .skip(skip)
+        .limit(limitNum);
 
-      // Get total count of matching documents
       const total = await Product.countDocuments();
-
-      // Calculate total pages
       const totalPages = Math.ceil(total / limitNum);
 
       // const products = await Product.find();
