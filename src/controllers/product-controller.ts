@@ -31,10 +31,6 @@ export interface IProductService {
 export type CreateProductBody = Omit<IProduct, "id">;
 type UpdateProductBody = Partial<CreateProductBody>;
 
-async function getAllProducts(): Promise<IProduct[]> {
-  return await Product.find();
-}
-
 async function getProductById(id: ProductId): Promise<IProduct | null> {
   return await Product.findById(id);
 }
@@ -66,7 +62,7 @@ class ProductController {
 
   async getAllProducts(req: Request, res: Response) {
     try {
-      const products = await getAllProducts();
+      const products = await Product.find();
       res.json(products);
     } catch (error) {
       res.status(500).json({ message: (error as Error).message });
