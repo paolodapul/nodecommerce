@@ -2,7 +2,6 @@
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { Request, Response } from "express";
-import CartService from "../services/cart-service";
 import { Product } from "../models/product-model";
 import Cart, { ICart, ICartItem } from "../models/cart-model";
 import { Types } from "mongoose";
@@ -87,6 +86,25 @@ export async function updateCartItem(
   await cart.save();
 }
 
+export async function removeFromCart(
+  userId: string,
+  productId: string
+): Promise<void> {
+  const cart = await getCart(userId);
+  if (!cart) throw new Error("Cart not found");
+
+  const itemIndex = cart.items.findIndex(
+    (i) => i.productId.toString() === productId
+  );
+  if (itemIndex === -1) throw new Error("Item not found in cart");
+
+  const item = cart.items[itemIndex];
+  cart.totalAmount -= item.price * item.quantity;
+  cart.items.splice(itemIndex, 1);
+
+  await cart.save();
+}
+
 class CartController {
   async addToCart(
     req: Request<{ userId: string }, object, CreateCartItemBody>,
@@ -141,7 +159,7 @@ class CartController {
   async removeFromCart(req: Request, res: Response): Promise<void> {
     try {
       const { userId, productId } = req.params;
-      await CartService.removeFromCart(userId, productId);
+      await removeFromCart(userId, productId);
       res.json({ message: "Item removed from cart" });
     } catch (error) {
       res.status(500).json({
