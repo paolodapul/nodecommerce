@@ -46,7 +46,7 @@ class AuthController {
         }
       );
 
-      res.status(200).json({ description: "Found user.", token });
+      res.status(200).json({ description: "Log in successful.", token });
     } catch (error) {
       res.status(500).json({
         error: "Login failed",
