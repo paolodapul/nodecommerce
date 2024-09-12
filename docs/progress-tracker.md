@@ -1,3 +1,7 @@
+# Auth
+
+- [x] Apply Zod to validate log in input
+
 # Products
 
 - [x] Create Product model with categories and reviews
