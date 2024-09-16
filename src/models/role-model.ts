@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import { model, Schema, Document } from "mongoose";
 
 export const VALID_PERMISSIONS = [
   // Product management
@@ -29,9 +29,10 @@ interface IRole extends Document {
   name: string;
   permissions: Permission[];
   description?: string;
+  createdAt: Date;
 }
 
-const roleSchema = new mongoose.Schema({
+const roleSchema = new Schema({
   name: {
     type: String,
     required: true,
@@ -64,6 +65,6 @@ const roleSchema = new mongoose.Schema({
   },
 });
 
-const Role = mongoose.model<IRole>("Role", roleSchema);
+const Role = model<IRole>("Role", roleSchema);
 
 export { Role };
