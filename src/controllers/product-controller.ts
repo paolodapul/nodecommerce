@@ -1,9 +1,8 @@
 import { NextFunction, Request, Response } from "express";
-import { Types } from "mongoose";
-import { Product } from "../models/product-model";
 import {
   CreateProductInput,
   createProductSchema,
+  CreateReviewInput,
   DeleteProductByIdParams,
   deleteProductByIdSchema,
   GetProductByIdParams,
@@ -16,18 +15,14 @@ import {
 import { validate } from "../utils/validator";
 import { BadRequestException } from "../types/error-types";
 import {
+  addReview,
   createProduct,
   deleteProduct,
   getAllProducts,
   getProductById,
   updateProduct,
 } from "../core/product";
-
-interface AuthRequest extends Request {
-  user?: {
-    id: string;
-  };
-}
+import { AuthRequest } from "../types/auth-types";
 
 class ProductController {
   async createProduct(req: Request, res: Response, next: NextFunction) {
@@ -102,37 +97,19 @@ class ProductController {
     }
   }
 
-  async addReview(req: AuthRequest, res: Response) {
+  async addReview(req: AuthRequest, res: Response, next: NextFunction) {
     try {
       const { id } = req.params;
-      const { message, rating } = req.body as {
-        message: string;
-        rating: number;
-      };
       const userId = req.user?.id;
+      let product;
 
-      if (!userId) {
-        return res.status(401).json({ message: "User not authenticated" });
+      if (userId) {
+        product = await addReview(userId, id, req.body as CreateReviewInput);
       }
-
-      const product = await Product.findById(id);
-
-      if (!product) {
-        return res.status(404).json({ message: "Product not found" });
-      }
-
-      const review = {
-        user: new Types.ObjectId(userId),
-        message,
-        rating,
-      };
-
-      product.reviews.push(review);
-      await product.save();
 
       res.status(201).json(product);
     } catch (error) {
-      res.status(400).json({ message: (error as Error).message });
+      next(error);
     }
   }
 }

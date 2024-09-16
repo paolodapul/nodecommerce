@@ -61,3 +61,12 @@ export const deleteProductByIdSchema = z
   .strict();
 
 export type DeleteProductByIdParams = z.infer<typeof deleteProductByIdSchema>;
+
+export const createReviewSchema = z
+  .object({
+    rating: z.number().int().min(1).max(5),
+    message: z.string().optional(),
+  })
+  .strict();
+
+export type CreateReviewInput = z.infer<typeof createReviewSchema>;

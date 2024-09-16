@@ -1,13 +1,18 @@
-import { FilterQuery } from "mongoose";
+import { FilterQuery, Types } from "mongoose";
 import { Category, Product } from "../models/product-model";
 import {
   CreateProductInput,
+  CreateReviewInput,
   DeleteProductByIdParams,
   GetProductByIdParams,
   GetProductQueryParams,
   UpdateProductInput,
 } from "../schemas/product-schema";
-import { BadRequestException, NotFoundException } from "../types/error-types";
+import {
+  BadRequestException,
+  NotFoundException,
+  UnauthorizedException,
+} from "../types/error-types";
 import { PriceFilter } from "../types/product-types";
 
 export async function createProduct(productBody: CreateProductInput) {
@@ -110,4 +115,32 @@ export async function deleteProduct(params: DeleteProductByIdParams) {
   }
 
   return product;
+}
+
+export async function addReview(
+  userId: string,
+  productId: string,
+  reviewBody: CreateReviewInput
+) {
+  if (!userId) {
+    throw new UnauthorizedException("User is not authenticated.");
+  }
+
+  const product = await Product.findById(productId);
+
+  if (!product) {
+    throw new NotFoundException("Product not found.");
+  }
+
+  const { message, rating } = reviewBody;
+
+  const review = {
+    user: new Types.ObjectId(userId),
+    message: message,
+    rating: rating,
+  };
+
+  product.reviews.push(review);
+  const res = await product.save();
+  return res;
 }
