@@ -10,7 +10,8 @@ import express, {
 } from "express";
 import orderController from "./order-controller";
 import OrderService, { OrderData } from "../services/order-service";
-import { IOrder } from "../models/order-model";
+// import { IOrder } from "../models/order-model";
+import { IOrder } from "../types/OrderTypes";
 import mongoose from "mongoose";
 
 jest.mock("../services/order-service");
