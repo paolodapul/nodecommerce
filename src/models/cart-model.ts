@@ -1,19 +1,5 @@
-// src/models/Cart.ts
-import mongoose, { Schema, Document } from "mongoose";
-
-export interface ICartItem {
-  productId: mongoose.Types.ObjectId;
-  quantity: number;
-  price: number;
-}
-
-export interface ICart extends Document {
-  userId: mongoose.Types.ObjectId;
-  items: ICartItem[];
-  totalAmount: number;
-  createdAt: Date;
-  updatedAt: Date;
-}
+import { Schema, model } from "mongoose";
+import { ICart } from "../types/CartTypes";
 
 const CartItemSchema: Schema = new Schema({
   productId: { type: Schema.Types.ObjectId, ref: "Product", required: true },
@@ -35,4 +21,6 @@ const CartSchema: Schema = new Schema(
   { timestamps: true }
 );
 
-export default mongoose.model<ICart>("Cart", CartSchema);
+const Cart = model<ICart>("Cart", CartSchema);
+
+export { Cart };
