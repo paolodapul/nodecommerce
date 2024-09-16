@@ -1,25 +1,5 @@
-import mongoose, { Schema, Document } from "mongoose";
-
-export interface IOrderItem {
-  productId: mongoose.Types.ObjectId;
-  quantity: number;
-  price: number;
-}
-
-export interface IOrder extends Document {
-  userId: mongoose.Types.ObjectId;
-  items: IOrderItem[];
-  totalAmount: number;
-  status:
-    | "pending"
-    | "processing"
-    | "shipped"
-    | "delivered"
-    | "cancelled"
-    | "completed";
-  createdAt: Date;
-  updatedAt: Date;
-}
+import { Schema, model } from "mongoose";
+import { IOrder } from "../types/OrderTypes";
 
 const orderSchema: Schema = new Schema(
   {
@@ -38,13 +18,20 @@ const orderSchema: Schema = new Schema(
     totalAmount: { type: Number, required: true },
     status: {
       type: String,
-      enum: ["pending", "processing", "shipped", "delivered", "cancelled"],
+      enum: [
+        "pending",
+        "processing",
+        "shipped",
+        "delivered",
+        "cancelled",
+        "completed",
+      ],
       default: "pending",
     },
   },
   { timestamps: true }
 );
 
-const Order = mongoose.model<IOrder>("Order", orderSchema);
+const Order = model<IOrder>("Order", orderSchema);
 
 export { Order };
