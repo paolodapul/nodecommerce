@@ -1,7 +1,14 @@
 // controllers/product.controller.ts
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import { Document, FilterQuery, Types } from "mongoose";
 import { Category, Product } from "../models/product-model";
+import {
+  CreateProductInput,
+  createProductSchema,
+} from "../schemas/product-schema";
+import { validate } from "../utils/validator";
+import { BadRequestException } from "../types/error-types";
+import { createProduct } from "../core/product";
 
 export interface IProduct extends Document {
   name: string;
@@ -43,16 +50,16 @@ export type CreateProductBody = Omit<IProduct, "id">;
 type UpdateProductBody = Partial<CreateProductBody>;
 
 class ProductController {
-  async createProduct(
-    req: Request<object, object, CreateProductBody>,
-    res: Response
-  ) {
+  async createProduct(req: Request, res: Response, next: NextFunction) {
     try {
-      let product = new Product(req.body as ProductData);
-      product = await product.save();
-      res.status(201).json(product);
+      const validationResult = validate(createProductSchema, req.body);
+      if (!validationResult.success) {
+        throw new BadRequestException(validationResult.errors);
+      }
+      await createProduct(req.body as CreateProductInput);
+      res.status(201).json({ message: "Product created." });
     } catch (error) {
-      res.status(400).json({ message: (error as Error).message });
+      next(error);
     }
   }
 
