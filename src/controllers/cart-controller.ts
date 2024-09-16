@@ -1,7 +1,8 @@
 import { Request, Response } from "express";
 import { Product } from "../models/product-model";
-import Cart, { ICart, ICartItem } from "../models/cart-model";
+import { Cart } from "../models/cart-model";
 import { Types } from "mongoose";
+import { ICart, ICartItem } from "../types/CartTypes";
 
 export type CreateCartItemBody = Omit<ICartItem, "id">;
 type UpdateProductBody = Partial<CreateCartItemBody>;
