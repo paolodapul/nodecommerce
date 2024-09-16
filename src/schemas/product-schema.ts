@@ -9,3 +9,29 @@ export const createProductSchema = z
   .strict();
 
 export type CreateProductInput = z.infer<typeof createProductSchema>;
+
+export const getProductsSchema = z
+  .object({
+    q: z.string().optional(),
+    page: z.coerce.number().int().positive().default(1),
+    limit: z.coerce.number().int().positive().max(100).default(10),
+    sortBy: z.enum(["name", "price", "createdAt"]).default("name"),
+    sortOrder: z.enum(["asc", "desc"]).default("asc"),
+    category: z.string().optional(),
+    minPrice: z.coerce.number().nonnegative().optional(),
+    maxPrice: z.coerce.number().positive().optional(),
+  })
+  .refine(
+    (data) => {
+      if (data.minPrice !== undefined && data.maxPrice !== undefined) {
+        return data.minPrice <= data.maxPrice;
+      }
+      return true;
+    },
+    {
+      message: "minPrice must be less than or equal to maxPrice",
+      path: ["minPrice", "maxPrice"],
+    }
+  );
+
+export type GetProductQueryParams = z.infer<typeof getProductsSchema>;
