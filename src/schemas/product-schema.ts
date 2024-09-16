@@ -35,3 +35,11 @@ export const getProductsSchema = z
   );
 
 export type GetProductQueryParams = z.infer<typeof getProductsSchema>;
+
+export const getProductByIdSchema = z
+  .object({
+    id: z.string(),
+  })
+  .strict();
+
+export type GetProductByIdParams = z.infer<typeof getProductByIdSchema>;

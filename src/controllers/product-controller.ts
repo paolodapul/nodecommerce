@@ -5,12 +5,14 @@ import { Product } from "../models/product-model";
 import {
   CreateProductInput,
   createProductSchema,
+  GetProductByIdParams,
+  getProductByIdSchema,
   GetProductQueryParams,
   getProductsSchema,
 } from "../schemas/product-schema";
 import { validate } from "../utils/validator";
 import { BadRequestException } from "../types/error-types";
-import { createProduct, getAllProducts } from "../core/product";
+import { createProduct, getAllProducts, getProductById } from "../core/product";
 
 export interface IProduct extends Document {
   name: string;
@@ -75,16 +77,16 @@ class ProductController {
     }
   }
 
-  async getProductById(req: Request<{ id: string }>, res: Response) {
+  async getProductById(req: Request, res: Response, next: NextFunction) {
     try {
-      const product = await Product.findById(req.params.id);
-      if (product) {
-        res.json(product);
-      } else {
-        res.status(404).json({ message: "Product not found" });
+      const validationResult = validate(getProductByIdSchema, req.params);
+      if (!validationResult.success) {
+        throw new BadRequestException(validationResult.errors);
       }
+      const product = await getProductById(req.params as GetProductByIdParams);
+      res.status(200).json(product);
     } catch (error) {
-      res.status(500).json({ message: (error as Error).message });
+      next(error);
     }
   }
 

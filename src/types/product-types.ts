@@ -19,3 +19,8 @@ export interface IProduct extends Document {
   createdAt: Date;
   updatedAt: Date;
 }
+
+export interface PriceFilter {
+  $gte?: number;
+  $lte?: number;
+}

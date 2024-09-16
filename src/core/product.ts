@@ -2,18 +2,15 @@ import { FilterQuery } from "mongoose";
 import { Category, Product } from "../models/product-model";
 import {
   CreateProductInput,
+  GetProductByIdParams,
   GetProductQueryParams,
 } from "../schemas/product-schema";
-import { BadRequestException } from "../types/error-types";
+import { BadRequestException, NotFoundException } from "../types/error-types";
+import { PriceFilter } from "../types/product-types";
 
 export async function createProduct(productBody: CreateProductInput) {
   const product = new Product(productBody);
   await product.save();
-}
-
-interface PriceFilter {
-  $gte?: number;
-  $lte?: number;
 }
 
 export async function getAllProducts(
@@ -76,4 +73,14 @@ export async function getAllProducts(
     total,
     totalPages,
   };
+}
+
+export async function getProductById(params: GetProductByIdParams) {
+  const product = await Product.findById(params.id);
+
+  if (!product) {
+    throw new NotFoundException("Product not found.");
+  }
+
+  return product;
 }
