@@ -53,3 +53,11 @@ export const updateProductSchema = z
   .strict();
 
 export type UpdateProductInput = z.infer<typeof updateProductSchema>;
+
+export const deleteProductByIdSchema = z
+  .object({
+    id: z.string(),
+  })
+  .strict();
+
+export type DeleteProductByIdParams = z.infer<typeof deleteProductByIdSchema>;

@@ -1,10 +1,11 @@
-// controllers/product.controller.ts
 import { NextFunction, Request, Response } from "express";
-import { Document, Types } from "mongoose";
+import { Types } from "mongoose";
 import { Product } from "../models/product-model";
 import {
   CreateProductInput,
   createProductSchema,
+  DeleteProductByIdParams,
+  deleteProductByIdSchema,
   GetProductByIdParams,
   getProductByIdSchema,
   GetProductQueryParams,
@@ -16,43 +17,17 @@ import { validate } from "../utils/validator";
 import { BadRequestException } from "../types/error-types";
 import {
   createProduct,
+  deleteProduct,
   getAllProducts,
   getProductById,
   updateProduct,
 } from "../core/product";
-
-export interface IProduct extends Document {
-  name: string;
-  price: number;
-  description?: string | null;
-  createdAt: Date;
-  updatedAt: Date;
-}
-
-export type ProductData = Pick<IProduct, "name" | "price" | "description">;
-
-export type ProductId = string | Types.ObjectId;
-
-export type ProductUpdateData = Partial<ProductData>;
-
-export interface IProductService {
-  createProduct(productData: ProductData): Promise<IProduct>;
-  getAllProducts(): Promise<IProduct[]>;
-  getProductById(id: ProductId): Promise<IProduct | null>;
-  updateProduct(
-    id: ProductId,
-    updateData: ProductUpdateData
-  ): Promise<IProduct | null>;
-  deleteProduct(id: ProductId): Promise<IProduct | null>;
-}
 
 interface AuthRequest extends Request {
   user?: {
     id: string;
   };
 }
-
-export type CreateProductBody = Omit<IProduct, "id">;
 
 class ProductController {
   async createProduct(req: Request, res: Response, next: NextFunction) {
@@ -112,16 +87,18 @@ class ProductController {
     }
   }
 
-  async deleteProduct(req: Request<{ id: string }>, res: Response) {
+  async deleteProduct(req: Request, res: Response, next: NextFunction) {
     try {
-      const product = await Product.findByIdAndDelete(req.params.id);
-      if (product) {
-        res.json({ message: "Product deleted successfully" });
-      } else {
-        res.status(404).json({ message: "Product not found" });
+      const validationResult = validate(deleteProductByIdSchema, req.params);
+      if (!validationResult.success) {
+        throw new BadRequestException(validationResult.errors);
       }
+      const product = await deleteProduct(
+        req.params as DeleteProductByIdParams
+      );
+      res.status(200).json(product);
     } catch (error) {
-      res.status(500).json({ message: (error as Error).message });
+      next(error);
     }
   }
 

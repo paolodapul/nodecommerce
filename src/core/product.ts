@@ -2,6 +2,7 @@ import { FilterQuery } from "mongoose";
 import { Category, Product } from "../models/product-model";
 import {
   CreateProductInput,
+  DeleteProductByIdParams,
   GetProductByIdParams,
   GetProductQueryParams,
   UpdateProductInput,
@@ -93,6 +94,16 @@ export async function updateProduct(
   const product = await Product.findByIdAndUpdate(productId, productBody, {
     new: true,
   });
+
+  if (!product) {
+    throw new NotFoundException("Product not found.");
+  }
+
+  return product;
+}
+
+export async function deleteProduct(params: DeleteProductByIdParams) {
+  const product = await Product.findByIdAndDelete(params.id);
 
   if (!product) {
     throw new NotFoundException("Product not found.");
