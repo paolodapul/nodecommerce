@@ -9,10 +9,17 @@ import {
   getProductByIdSchema,
   GetProductQueryParams,
   getProductsSchema,
+  UpdateProductInput,
+  updateProductSchema,
 } from "../schemas/product-schema";
 import { validate } from "../utils/validator";
 import { BadRequestException } from "../types/error-types";
-import { createProduct, getAllProducts, getProductById } from "../core/product";
+import {
+  createProduct,
+  getAllProducts,
+  getProductById,
+  updateProduct,
+} from "../core/product";
 
 export interface IProduct extends Document {
   name: string;
@@ -46,7 +53,6 @@ interface AuthRequest extends Request {
 }
 
 export type CreateProductBody = Omit<IProduct, "id">;
-type UpdateProductBody = Partial<CreateProductBody>;
 
 class ProductController {
   async createProduct(req: Request, res: Response, next: NextFunction) {
@@ -90,21 +96,19 @@ class ProductController {
     }
   }
 
-  async updateProduct(
-    req: Request<{ id: string }, object, UpdateProductBody>,
-    res: Response
-  ) {
+  async updateProduct(req: Request, res: Response, next: NextFunction) {
     try {
-      const product = await Product.findByIdAndUpdate(req.params.id, req.body, {
-        new: true,
-      });
-      if (product) {
-        res.json(product);
-      } else {
-        res.status(404).json({ message: "Product not found" });
+      const validationResult = validate(updateProductSchema, req.body);
+      if (!validationResult.success) {
+        throw new BadRequestException(validationResult.errors);
       }
+      const product = await updateProduct(
+        req.params.id,
+        validationResult.data as UpdateProductInput
+      );
+      res.status(200).json(product);
     } catch (error) {
-      res.status(400).json({ message: (error as Error).message });
+      next(error);
     }
   }
 

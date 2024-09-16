@@ -4,6 +4,7 @@ import {
   CreateProductInput,
   GetProductByIdParams,
   GetProductQueryParams,
+  UpdateProductInput,
 } from "../schemas/product-schema";
 import { BadRequestException, NotFoundException } from "../types/error-types";
 import { PriceFilter } from "../types/product-types";
@@ -77,6 +78,21 @@ export async function getAllProducts(
 
 export async function getProductById(params: GetProductByIdParams) {
   const product = await Product.findById(params.id);
+
+  if (!product) {
+    throw new NotFoundException("Product not found.");
+  }
+
+  return product;
+}
+
+export async function updateProduct(
+  productId: string,
+  productBody: UpdateProductInput
+) {
+  const product = await Product.findByIdAndUpdate(productId, productBody, {
+    new: true,
+  });
 
   if (!product) {
     throw new NotFoundException("Product not found.");
