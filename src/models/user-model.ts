@@ -1,6 +1,14 @@
-import mongoose from "mongoose";
+import { Document, Schema, model, Types } from "mongoose";
 
-const userSchema = new mongoose.Schema({
+interface IUser extends Document {
+  username: string;
+  email: string;
+  password: string;
+  roles: Types.ObjectId[];
+  createdAt: Date;
+}
+
+const userSchema = new Schema({
   username: {
     type: String,
     required: true,
@@ -20,7 +28,7 @@ const userSchema = new mongoose.Schema({
   },
   roles: [
     {
-      type: mongoose.Schema.Types.ObjectId,
+      type: Schema.Types.ObjectId,
       ref: "Role",
     },
   ],
@@ -30,6 +38,6 @@ const userSchema = new mongoose.Schema({
   },
 });
 
-const User = mongoose.model("User", userSchema);
+const User = model<IUser>("User", userSchema);
 
 export { User };
