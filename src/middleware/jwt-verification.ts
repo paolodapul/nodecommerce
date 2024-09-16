@@ -7,7 +7,7 @@ import jwt, {
 import { Role } from "../models/role-model";
 import { User } from "../models/user-model";
 import mongoose from "mongoose";
-import { Permission } from "../models/role-model";
+import { Permission } from "../types/RoleTypes";
 
 interface AuthPayload extends JwtPayload {
   id?: string;
