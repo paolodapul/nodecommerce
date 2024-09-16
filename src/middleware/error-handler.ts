@@ -1,21 +1,40 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { NextFunction, Request, Response } from "express";
+import {
+  HttpException,
+  InternalServerErrorException,
+} from "../types/error-types";
 
-function errorHandler(
+const errorHandler = (
   err: Error,
-  _req: Request,
+  req: Request,
   res: Response,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   _next: NextFunction
-): void {
-  /**
-   * TODO: Implement a proper logging service
-   */
-  console.error(err.stack);
+) => {
+  console.error(err);
 
-  res.status(500).json({
-    message: "Internal Server Error",
-    error: err.message,
-  });
-}
+  if (err instanceof HttpException) {
+    res.status(err.statusCode).json({
+      error: {
+        name: err.name,
+        message: err.message,
+        statusCode: err.statusCode,
+      },
+    });
+  } else {
+    const internalError = new InternalServerErrorException(
+      process.env.NODE_ENV === "production"
+        ? "Internal Server Error"
+        : err.message
+    );
+    res.status(internalError.statusCode).json({
+      error: {
+        name: internalError.name,
+        message: internalError.message,
+        statusCode: internalError.statusCode,
+      },
+    });
+  }
+};
 
 export default errorHandler;
