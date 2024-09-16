@@ -1,5 +1,5 @@
 import { Schema, model } from "mongoose";
-import { ICart } from "../types/CartTypes";
+import { ICart } from "../types/cart-types";
 
 const CartItemSchema: Schema = new Schema({
   productId: { type: Schema.Types.ObjectId, ref: "Product", required: true },

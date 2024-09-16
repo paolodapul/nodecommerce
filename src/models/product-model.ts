@@ -1,5 +1,5 @@
 import { Schema, model } from "mongoose";
-import { ICategory, IProduct } from "../types/ProductTypes";
+import { ICategory, IProduct } from "../types/product-types";
 
 const categorySchema = new Schema({
   name: { type: String, required: true },

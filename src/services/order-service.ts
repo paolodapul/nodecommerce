@@ -1,6 +1,6 @@
 import { Document, Types } from "mongoose";
 import { Order } from "../models/order-model";
-import { IOrder, IOrderItem } from "../types/OrderTypes";
+import { IOrder, IOrderItem } from "../types/order-types";
 import { getCart } from "../controllers/cart-controller";
 
 export interface IOrderDocument extends IOrder, Document {}

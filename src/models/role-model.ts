@@ -1,5 +1,5 @@
 import { model, Schema } from "mongoose";
-import { VALID_PERMISSIONS, Permission, IRole } from "../types/RoleTypes";
+import { VALID_PERMISSIONS, Permission, IRole } from "../types/role-types";
 
 const roleSchema = new Schema({
   name: {

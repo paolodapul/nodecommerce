@@ -3,9 +3,9 @@ import { Request } from "express";
 import { hashPassword, verifyPassword } from "../utils/hashing";
 import { Role } from "../models/role-model";
 import { User } from "../models/user-model";
-import { IUser } from "../types/UserTypes";
+import { IUser } from "../types/user-types";
 import jwt from "jsonwebtoken";
-import { TokenBody } from "../types/AuthTypes";
+import { TokenBody } from "../types/auth-types";
 
 const loginSchema = z
   .object({

@@ -3,7 +3,7 @@ import OrderService, {
   OrderData,
   OrderUpdateData,
 } from "../services/order-service";
-import { IOrder } from "../types/OrderTypes";
+import { IOrder } from "../types/order-types";
 
 interface CreateOrderRequest extends Request {
   user?: {
