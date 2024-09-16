@@ -6,7 +6,7 @@ export interface ICategory extends Document {
 
 export interface IReview {
   user: Types.ObjectId;
-  message: string;
+  message?: string;
   rating: number;
 }
 
