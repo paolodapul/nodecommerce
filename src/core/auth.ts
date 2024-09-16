@@ -1,11 +1,10 @@
-import { Request } from "express";
 import { hashPassword, verifyPassword } from "../utils/hashing";
 import { Role } from "../models/role-model";
 import { User } from "../models/user-model";
 import { IUser } from "../types/user-types";
 import jwt from "jsonwebtoken";
 import { TokenBody } from "../types/auth-types";
-import { loginSchema, RegisterInput } from "../schemas/auth-schema";
+import { RegisterInput } from "../schemas/auth-schema";
 
 export async function createCustomer(registerBody: RegisterInput) {
   const { username, email, password } = registerBody;
@@ -34,15 +33,6 @@ export async function createCustomer(registerBody: RegisterInput) {
     roles: customerRoles,
   });
   await newUser.save();
-}
-
-export function validateLoginRequest(request: Request) {
-  const result = loginSchema.safeParse(request.body);
-  if (!result.success) {
-    throw new Error(
-      `Validation failed: ${JSON.stringify(result.error.errors)}`
-    );
-  }
 }
 
 export async function verifyUser(
