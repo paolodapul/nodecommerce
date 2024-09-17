@@ -20,6 +20,10 @@ export const registerSchema = z
       .refine(
         (username) => !username.startsWith("-") && !username.endsWith("-"),
         "Username cannot start or end with a hyphen"
+      )
+      .refine(
+        (username) => !/^\d+$/.test(username),
+        "Username cannot consist of numbers only"
       ),
     email: z.string().email(),
     password: z.string().min(8),
