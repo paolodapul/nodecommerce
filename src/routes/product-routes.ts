@@ -1,35 +1,34 @@
-/* eslint-disable @typescript-eslint/no-misused-promises */
-/* eslint-disable @typescript-eslint/unbound-method */
 import express from "express";
-import productController from "../controllers/product-controller";
+import * as productController from "../controllers/product-controller";
 import { jwtVerification } from "../middleware";
+import { asyncHandler } from "../utils/async-handler";
 
 const router = express.Router();
 
 // Public
-router.get("/", productController.getAllProducts);
-router.get("/:id", productController.getProductById);
+router.get("/", asyncHandler(productController.getAllProducts));
+router.get("/:id", asyncHandler(productController.getProductById));
 
 router.post(
   "/",
-  jwtVerification("create_products"),
-  productController.createProduct
+  asyncHandler(jwtVerification("create_products")),
+  asyncHandler(productController.createProduct)
 );
 router.put(
   "/:id",
-  jwtVerification("update_products"),
-  productController.updateProduct
+  asyncHandler(jwtVerification("update_products")),
+  asyncHandler(productController.updateProduct)
 );
 router.delete(
   "/:id",
-  jwtVerification("delete_products"),
-  productController.deleteProduct
+  asyncHandler(jwtVerification("delete_products")),
+  asyncHandler(productController.deleteProduct)
 );
 
 router.post(
   "/:id/reviews",
-  jwtVerification("create_review"),
-  productController.addReview
+  asyncHandler(jwtVerification("create_review")),
+  asyncHandler(productController.addReview)
 );
 
 export default router;
