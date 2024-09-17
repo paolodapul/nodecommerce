@@ -1,4 +1,5 @@
 import { Category } from "../models/product-model";
+import logger from "../utils/logger";
 
 async function initializeCategories() {
   try {
@@ -22,9 +23,9 @@ async function initializeCategories() {
       await Category.create({ name: categoryName });
     }
 
-    console.log("Categories seeded successfully");
+    logger.info("Categories seeded successfully");
   } catch (error) {
-    console.error("Error seeding categories:", error);
+    logger.error("Error seeding categories:", error);
   }
 }
 

@@ -1,3 +1,5 @@
+import logger from "./logger";
+
 type StepFunction<T> = (input: T) => Promise<T>;
 type FinallyFunction<T> = (input: T) => void;
 
@@ -46,7 +48,7 @@ export class Workflow<T> {
         } catch (error: unknown) {
           attempts++;
           if (attempts === this.retryLimit) {
-            console.error(
+            logger.error(
               `Step ${i + 1} failed after ${attempts} attempts:`,
               error instanceof Error ? error.message : String(error)
             );
@@ -55,7 +57,7 @@ export class Workflow<T> {
       }
 
       if (!success) {
-        console.error("Workflow aborted due to step failure.");
+        logger.error("Workflow aborted due to step failure.");
         break;
       }
     }
@@ -64,7 +66,7 @@ export class Workflow<T> {
       try {
         this.finallyCallback(input);
       } catch (error: unknown) {
-        console.error(
+        logger.error(
           "Error in final step:",
           error instanceof Error ? error.message : String(error)
         );

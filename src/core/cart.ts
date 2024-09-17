@@ -2,6 +2,7 @@ import { Cart } from "../models/cart-model";
 import { Product } from "../models/product-model";
 import { ICart, ICartItem } from "../types/cart-types";
 import { Types } from "mongoose";
+import logger from "../utils/logger";
 
 export async function getCart(userId: string): Promise<ICart> {
   if (!userId || !Types.ObjectId.isValid(userId)) {
@@ -24,7 +25,7 @@ export async function getCart(userId: string): Promise<ICart> {
     return cart;
   } catch (error) {
     // Log the error for debugging purposes
-    console.error("Error in getCart:", error);
+    logger.error("Error in getCart:", error);
     throw new Error("Failed to retrieve cart");
   }
 }

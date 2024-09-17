@@ -1,4 +1,5 @@
 import { Role } from "../models/role-model";
+import logger from "../utils/logger";
 
 async function initializeRoles() {
   await Role.deleteMany({});
@@ -54,9 +55,9 @@ async function initializeRoles() {
         new: true,
         setDefaultsOnInsert: true,
       });
-      console.log(`Role ${role.name} initialized successfully`);
+      logger.info(`Role ${role.name} initialized successfully`);
     } catch (error) {
-      console.error(`Error initializing role ${role.name}:`, error);
+      logger.error(`Error initializing role ${role.name}:`, error);
     }
   }
 }

@@ -2,6 +2,7 @@ import { Role } from "../models/role-model";
 import { User } from "../models/user-model";
 
 import { hashPassword } from "../utils/hashing";
+import logger from "../utils/logger";
 
 async function initializeUsers() {
   try {
@@ -39,9 +40,9 @@ async function initializeUsers() {
       });
     }
 
-    console.log("Users seeded successfully");
+    logger.info("Users seeded successfully");
   } catch (error) {
-    console.error("Error seeding users:", error);
+    logger.error("Error seeding users:", error);
   }
 }
 

@@ -1,4 +1,5 @@
 import bcrypt from "bcryptjs";
+import logger from "./logger";
 
 async function hashPassword(password: string): Promise<string> {
   const saltRounds = 10;
@@ -7,7 +8,7 @@ async function hashPassword(password: string): Promise<string> {
     const hash = await bcrypt.hash(password, salt);
     return hash;
   } catch (error) {
-    console.error("Error hashing password:", error);
+    logger.error("Error hashing password:", error);
     throw error;
   }
 }
@@ -20,7 +21,7 @@ async function verifyPassword(
     const match = await bcrypt.compare(plainTextPassword, hashedPassword);
     return match;
   } catch (error) {
-    console.error("Error comparing passwords:", error);
+    logger.error("Error comparing passwords:", error);
     throw error;
   }
 }

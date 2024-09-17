@@ -1,6 +1,7 @@
 import { Product, Category } from "../models/product-model";
 import { User } from "../models/user-model";
 import mongoose from "mongoose";
+import logger from "../utils/logger";
 
 async function initializeProducts() {
   try {
@@ -263,7 +264,7 @@ async function initializeProducts() {
     for (const product of products) {
       const category = categories.find((c) => c.name === product.category);
       if (!category) {
-        console.warn(
+        logger.warn(
           `Category ${product.category} not found for product ${product.name}`
         );
         continue;
@@ -285,9 +286,9 @@ async function initializeProducts() {
       });
     }
 
-    console.log("Products and reviews seeded successfully");
+    logger.info("Products and reviews seeded successfully");
   } catch (error) {
-    console.error("Error seeding products and reviews:", error);
+    logger.error("Error seeding products and reviews:", error);
   }
 }
 

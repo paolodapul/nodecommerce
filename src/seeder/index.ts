@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 import { initializeUsers } from "./initialize-users";
 import { initializeCategories } from "./initialize-categories";
 import { initializeProducts } from "./initialize-products";
+import logger from "../utils/logger";
 
 const ENV = process.env.NODE_ENV ?? "development";
 dotenv.config({ path: `.env.${ENV}` });
@@ -13,17 +14,17 @@ const MONGO_URI = process.env.MONGO_URI;
 async function runSeeders() {
   try {
     await mongoose.connect(MONGO_URI as string);
-    console.log("Connected to MongoDB");
+    logger.info("Connected to MongoDB");
     await initializeRoles();
     await initializeUsers();
     await initializeCategories();
     await initializeProducts();
-    console.log("All seeders completed successfully");
+    logger.info("All seeders completed successfully");
   } catch (error) {
-    console.error("Error running seeders:", error);
+    logger.error("Error running seeders:", error);
   } finally {
     await mongoose.connection.close();
-    console.log("MongoDB connection closed");
+    logger.info("MongoDB connection closed");
   }
 }
 
