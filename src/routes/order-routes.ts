@@ -1,56 +1,39 @@
-/* eslint-disable @typescript-eslint/unbound-method */
-/* eslint-disable @typescript-eslint/no-misused-promises */
 import express from "express";
-import orderController from "../controllers/order-controller";
+import * as orderController from "../controllers/order-controller";
 import { jwtVerification } from "../middleware";
+import { asyncHandler } from "../utils/async-handler";
 
 const router = express.Router();
 
-/**
- * Create order
- */
-
-router.post("/", jwtVerification("create_order"), orderController.createOrder);
-
-/**
- * Get order by ID
- */
+router.post(
+  "/",
+  asyncHandler(jwtVerification("create_order")),
+  asyncHandler(orderController.createOrder)
+);
 
 router.get(
   "/:orderId",
-  jwtVerification("view_orders"),
-  orderController.getOrder
+  asyncHandler(jwtVerification("view_orders")),
+  asyncHandler(orderController.getOrder)
 );
-
-/**
- * Update order
- */
 
 router.patch(
   "/:orderId",
-  jwtVerification("update_orders"),
-  orderController.updateOrder
+  asyncHandler(jwtVerification("update_orders")),
+  asyncHandler(orderController.updateOrder)
 );
-
-/**
- * Cancel order
- */
 
 router.post(
   "/:orderId/cancel",
-  jwtVerification("cancel_orders"),
-  orderController.cancelOrder
+  asyncHandler(jwtVerification("cancel_orders")),
+  asyncHandler(orderController.cancelOrder)
 );
 
-/**
- *  (Admin) Get user orders
- */
+router.get("/user/:userId", asyncHandler(orderController.getUserOrders));
 
-router.get("/user/:userId", orderController.getUserOrders);
-
-/**
- * (Admin) Update order status
- */
-router.patch("/:orderId/status", orderController.updateOrderStatus);
+router.patch(
+  "/:orderId/status",
+  asyncHandler(orderController.updateOrderStatus)
+);
 
 export default router;
