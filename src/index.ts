@@ -7,7 +7,7 @@ const ENV = process.env.NODE_ENV ?? "development";
 dotenv.config({ path: `.env.${ENV}` });
 
 const port = process.env.PORT ?? 3000;
-const app = createApp(ENV);
+const app = createApp();
 
 void (async () => await connectMongoDB())();
 

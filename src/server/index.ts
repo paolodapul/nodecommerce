@@ -1,20 +1,17 @@
-import express, { Express, Request, Response } from "express";
+import express, { Express } from "express";
 import helmet from "helmet";
 import { corsMiddleware as cors } from "../middleware";
 import errorHandler from "../middleware/error-handler";
 import routes from "../routes";
+import indexRoutes from "../routes/index-routes";
 
-function createApp(ENV: string) {
+function createApp() {
   const app: Express = express();
 
   app.use(helmet());
   app.use(cors);
   app.use(express.json());
-
-  app.get("/", (req: Request, res: Response) => {
-    res.send(`Welcome to Nodecommerce! - ${ENV}`);
-  });
-
+  app.use("/", indexRoutes);
   app.use("/api", routes);
   app.use(errorHandler);
 
