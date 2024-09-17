@@ -1,45 +1,32 @@
-/* eslint-disable @typescript-eslint/no-misused-promises */
-/* eslint-disable @typescript-eslint/unbound-method */
 import express from "express";
-import cartController from "../controllers/cart-controller";
+import * as cartController from "../controllers/cart-controller";
 import { jwtVerification } from "../middleware";
+import { asyncHandler } from "../utils/async-handler";
 
 const router = express.Router();
 
-/**
- * Get cart
- */
-
-router.get("/:userId", jwtVerification("view_cart"), cartController.getCart);
-
-/**
- * Add to cart
- */
+router.get(
+  "/:userId",
+  asyncHandler(jwtVerification("view_cart")),
+  asyncHandler(cartController.getCart)
+);
 
 router.post(
   "/:userId/items",
-  jwtVerification("add_to_cart"),
-  cartController.addToCart
+  asyncHandler(jwtVerification("add_to_cart")),
+  asyncHandler(cartController.addToCart)
 );
-
-/**
- * Update cart item
- */
 
 router.put(
   "/:userId/items/:productId",
-  jwtVerification("update_cart"),
-  cartController.updateCartItem
+  asyncHandler(jwtVerification("update_cart")),
+  asyncHandler(cartController.updateCartItem)
 );
-
-/**
- * Remove from cart
- */
 
 router.delete(
   "/:userId/items/:productId",
-  jwtVerification("remove_from_cart"),
-  cartController.removeFromCart
+  asyncHandler(jwtVerification("remove_from_cart")),
+  asyncHandler(cartController.removeFromCart)
 );
 
 export default router;
