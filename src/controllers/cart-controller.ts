@@ -1,107 +1,6 @@
 import { Request, Response } from "express";
-import { Product } from "../models/product-model";
-import { Cart } from "../models/cart-model";
-import { Types } from "mongoose";
-import { ICart, ICartItem } from "../types/cart-types";
-
-export type CreateCartItemBody = Omit<ICartItem, "id">;
-type UpdateProductBody = Partial<CreateCartItemBody>;
-
-export async function getCart(userId: string): Promise<ICart> {
-  if (!userId || !Types.ObjectId.isValid(userId)) {
-    throw new Error("Invalid user ID");
-  }
-
-  try {
-    let cart = await Cart.findOne({ userId: new Types.ObjectId(userId) });
-
-    if (!cart) {
-      // If no cart exists, create a new empty cart
-      cart = new Cart({
-        userId: new Types.ObjectId(userId),
-        items: [],
-        totalAmount: 0,
-      });
-      await cart.save();
-    }
-
-    return cart;
-  } catch (error) {
-    // Log the error for debugging purposes
-    console.error("Error in getCart:", error);
-    throw new Error("Failed to retrieve cart");
-  }
-}
-
-export async function addToCart(
-  userId: string,
-  item: Omit<ICartItem, "price">
-): Promise<void> {
-  const product = await Product.findById(item.productId);
-  if (!product) {
-    throw new Error("Product not found");
-  }
-
-  const cart = await getCart(userId);
-  if (cart) {
-    const existingItem = cart.items.find(
-      (i: { productId: { toString: () => string } }) =>
-        i.productId.toString() === item.productId.toString()
-    );
-    if (existingItem) {
-      existingItem.quantity += item.quantity;
-    } else {
-      cart.items.push({ ...item, price: product.price });
-    }
-    cart.totalAmount += product.price * item.quantity;
-    await cart.save();
-  } else {
-    await Cart.create({
-      userId: new Types.ObjectId(userId),
-      items: [{ ...item, price: product.price }],
-      totalAmount: product.price * item.quantity,
-    });
-  }
-}
-
-export async function updateCartItem(
-  userId: string,
-  productId: string,
-  quantity: number
-): Promise<void> {
-  const cart = await getCart(userId);
-  if (!cart) throw new Error("Cart not found");
-
-  const item = cart.items.find((i) => i.productId.toString() === productId);
-  if (!item) throw new Error("Item not found in cart");
-
-  const quantityDiff = quantity - item.quantity;
-  const amountDiff = quantityDiff * item.price;
-
-  item.quantity = quantity;
-  cart.totalAmount += amountDiff;
-
-  await cart.save();
-}
-
-export async function removeFromCart(
-  userId: string,
-  productId: string
-): Promise<void> {
-  const cart = await getCart(userId);
-  if (!cart) throw new Error("Cart not found");
-
-  const itemIndex = cart.items.findIndex(
-    (i) => i.productId.toString() === productId
-  );
-  if (itemIndex === -1) throw new Error("Item not found in cart");
-
-  const item = cart.items[itemIndex];
-  cart.totalAmount -= item.price * item.quantity;
-  cart.items.splice(itemIndex, 1);
-
-  await cart.save();
-}
+import * as CartCore from "../core/cart";
+import { CreateCartItemBody, UpdateProductBody } from "../types/cart-types";
 
 class CartController {
   async addToCart(
@@ -111,7 +10,7 @@ class CartController {
     try {
       const userId = req.params.userId;
       const item = req.body;
-      await addToCart(userId, item);
+      await CartCore.addToCart(userId, item);
       res.status(201).json({ message: "Item added to cart" });
     } catch (error) {
       res.status(500).json({
@@ -123,7 +22,7 @@ class CartController {
 
   async getCart(req: Request, res: Response): Promise<void> {
     try {
-      const cart = await getCart(req.params.userId);
+      const cart = await CartCore.getCart(req.params.userId);
       res.json(cart);
     } catch (error) {
       res.status(500).json({
@@ -144,7 +43,7 @@ class CartController {
     try {
       const { userId, productId } = req.params;
       const { quantity } = req.body;
-      await updateCartItem(userId, productId, quantity as number);
+      await CartCore.updateCartItem(userId, productId, quantity as number);
       res.json({ message: "Cart item updated" });
     } catch (error) {
       res.status(500).json({
@@ -157,7 +56,7 @@ class CartController {
   async removeFromCart(req: Request, res: Response): Promise<void> {
     try {
       const { userId, productId } = req.params;
-      await removeFromCart(userId, productId);
+      await CartCore.removeFromCart(userId, productId);
       res.json({ message: "Item removed from cart" });
     } catch (error) {
       res.status(500).json({

@@ -13,3 +13,6 @@ export interface ICart extends Document {
   createdAt: Date;
   updatedAt: Date;
 }
+
+export type CreateCartItemBody = Omit<ICartItem, "id">;
+export type UpdateProductBody = Partial<CreateCartItemBody>;
