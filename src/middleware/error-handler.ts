@@ -4,6 +4,7 @@ import {
   HttpException,
   InternalServerErrorException,
 } from "../types/error-types";
+import logger from "../utils/logger";
 
 const errorHandler = (
   err: Error,
@@ -11,7 +12,12 @@ const errorHandler = (
   res: Response,
   _next: NextFunction
 ) => {
-  console.error(err);
+  logger.error({
+    message: err.message,
+    stack: err.stack,
+    method: req.method,
+    url: req.url,
+  });
 
   if (err instanceof HttpException) {
     res.status(err.statusCode).json({
