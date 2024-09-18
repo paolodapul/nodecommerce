@@ -1,10 +1,17 @@
 import mongoose, { Document, Schema } from 'mongoose';
 
 export interface IOrderItem {
-  product: mongoose.Types.ObjectId;
+  product: mongoose.Types.ObjectId | {
+    _id: mongoose.Types.ObjectId;
+    name: string;
+    price: number;
+    seller: mongoose.Types.ObjectId;
+  };
   quantity: number;
   price: number;
 }
+
+export type OrderStatus = 'pending' | 'processing' | 'shipped' | 'delivered' | 'cancelled' | 'completed';
 
 export interface IOrder extends Document {
   user: mongoose.Types.ObjectId;
@@ -12,7 +19,7 @@ export interface IOrder extends Document {
   totalPrice: number;
   shippingFee: number;
   finalPrice: number;
-  status: 'pending' | 'processing' | 'shipped' | 'delivered' | 'cancelled';
+  status: OrderStatus;
   shippingAddress: string;
   paymentInfo: {
     id: string;
@@ -20,6 +27,7 @@ export interface IOrder extends Document {
     type: string;
   };
   paidAt: Date;
+  completedAt?: Date;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -65,7 +73,7 @@ const OrderSchema: Schema = new Schema({
   status: {
     type: String,
     required: true,
-    enum: ['pending', 'processing', 'shipped', 'delivered', 'cancelled'],
+    enum: ['pending', 'processing', 'shipped', 'delivered', 'cancelled', 'completed'],
     default: 'pending'
   },
   shippingAddress: {
@@ -87,6 +95,9 @@ const OrderSchema: Schema = new Schema({
     }
   },
   paidAt: {
+    type: Date
+  },
+  completedAt: {
     type: Date
   }
 }, {

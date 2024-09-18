@@ -1,6 +1,8 @@
 import { Response, NextFunction } from 'express';
-import { createOrder, getAllOrders } from '../services/order.service';
+import { createOrder, getAllOrders, getOrderById, updateOrderStatus } from '../services/order.service';
 import { AuthRequest } from '../middleware/auth';
+import ApiError from '../utils/apiError';
+import { OrderStatus } from '../models/order.model';
 
 export const createOrderController = async (req: AuthRequest, res: Response, next: NextFunction) => {
   try {
@@ -63,6 +65,51 @@ export const getAllOrdersController = async (req: AuthRequest, res: Response, ne
       success: true,
       count: formattedOrders.length,
       data: formattedOrders
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getOrderByIdController = async (req: AuthRequest, res: Response, next: NextFunction) => {
+  try {
+    const orderId = req.params.id;
+    const userId = req.user!.id;
+    const userRole = req.user!.role;
+
+    const order = await getOrderById(orderId, userId, userRole);
+
+    if (!order) {
+      return next(new ApiError(404, 'Order not found'));
+    }
+
+    res.status(200).json({
+      success: true,
+      data: order
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const updateOrderStatusController = async (req: AuthRequest, res: Response, next: NextFunction) => {
+  try {
+    const orderId = req.params.id;
+    const { status } = req.body;
+    const userId = req.user!.id;
+    const userRole = req.user!.role;
+
+    // Validate that status is a valid OrderStatus
+    if (!['pending', 'processing', 'shipped', 'delivered', 'cancelled', 'completed'].includes(status)) {
+      return next(new ApiError(400, 'Invalid order status provided'));
+    }
+
+    const updatedOrder = await updateOrderStatus(orderId, status as OrderStatus, userId, userRole);
+
+    res.status(200).json({
+      success: true,
+      message: 'Order status updated successfully',
+      data: updatedOrder
     });
   } catch (error) {
     next(error);
