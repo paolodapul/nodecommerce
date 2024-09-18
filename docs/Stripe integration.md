@@ -14,9 +14,9 @@
 2. To forward webhook events to your local HTTP server and to your webhook endpoint, run the command below:
 
    ```shell
-   stripe listen -e checkout.session.completed --forward-to http://localhost:3000/webhook
+   stripe listen -e checkout.session.completed --forward-to http://<your_static_ip>:<port>/api/webhook
    ```
 
 3. Command explanation:
    - The `-e checkout.session.completed` flag filters for a specific event type.
-   - `--forward-to http://localhost:3000/webhook` forwards the webhook events to your local server running on port 3000 at the `/webhook` endpoint.
+   - `--forward-to http://localhost:3000/api/webhook` forwards the webhook events to your local server running on port 3000 at the `/webhook` endpoint.
