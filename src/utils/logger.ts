@@ -38,6 +38,7 @@ const logger = createLogger({
   transports: [
     new transports.File({ filename: "error.log", level: "error" }), // Log errors to a file
     new transports.File({ filename: "combined.log" }), // Combined log for all levels
+    new transports.Console(),
   ],
 });
 
