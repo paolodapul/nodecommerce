@@ -31,8 +31,6 @@ export interface CreateOrderRequest extends Request {
   body: CreateOrderBody;
 }
 
-export interface IOrderDocument extends IOrder, Document {}
-
 export type OrderData = {
   userId: Types.ObjectId | string;
 };
@@ -46,23 +44,8 @@ export type OrderUpdateData = Partial<{
 }>;
 
 export type CreateOrderBody = OrderData;
-export type UpdateOrderBody = OrderUpdateData;
 
-export interface IOrderService {
-  createOrder(orderData: OrderData): Promise<IOrderDocument>;
-  getAllOrders(): Promise<IOrderDocument[]>;
-  getOrderById(id: OrderId): Promise<IOrderDocument | null>;
-  getOrdersByUserId(userId: string | Types.ObjectId): Promise<IOrderDocument[]>;
-  updateOrder(
-    id: OrderId,
-    updateData: OrderUpdateData
-  ): Promise<IOrderDocument | null>;
-  updateOrderStatus(
-    id: OrderId,
-    status: IOrder["status"]
-  ): Promise<IOrderDocument | null>;
-  cancelOrder(id: OrderId): Promise<IOrderDocument | null>;
-}
+export type UpdateOrderBody = OrderUpdateData;
 
 export type OrderStatus = Pick<UpdateOrderBody, "status"> & {
   status: NonNullable<UpdateOrderBody["status"]>;
