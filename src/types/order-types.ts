@@ -5,6 +5,8 @@ export interface IOrderItem {
   productId: Types.ObjectId;
   quantity: number;
   price: number;
+  stripeProductId: string;
+  stripePriceId: string;
 }
 
 export interface IOrder extends Document {
