@@ -46,7 +46,12 @@ export async function addToCart(
     if (existingItem) {
       existingItem.quantity += item.quantity;
     } else {
-      cart.items.push({ ...item, price: product.price });
+      cart.items.push({
+        ...item,
+        stripeProductId: product.stripeProductId,
+        stripePriceId: product.stripePriceId,
+        price: product.price,
+      });
     }
 
     cart.totalAmount += product.price * item.quantity;
