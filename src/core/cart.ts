@@ -3,6 +3,10 @@ import { Product } from "../models/product-model";
 import { ICart, ICartItem } from "../types/cart-types";
 import { Types } from "mongoose";
 import logger from "../utils/logger";
+import {
+  InternalServerErrorException,
+  NotFoundException,
+} from "../types/error-types";
 
 export async function getCart(userId: string): Promise<ICart> {
   if (!userId || !Types.ObjectId.isValid(userId)) {
@@ -63,6 +67,23 @@ export async function addToCart(
       items: [{ ...item, price: product.price }],
       totalAmount: product.price * item.quantity,
     });
+  }
+}
+
+export async function clearUserCart(userId: string): Promise<void> {
+  try {
+    const result = await Cart.findOneAndUpdate(
+      { userId },
+      { $set: { items: [], totalAmount: 0 } },
+      { new: true }
+    );
+
+    if (!result) {
+      throw new NotFoundException("Cart not found.");
+    }
+  } catch (error) {
+    logger.error((error as Error).message);
+    throw new InternalServerErrorException("An error has occurred.");
   }
 }
 
