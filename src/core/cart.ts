@@ -41,16 +41,16 @@ export async function addToCart(
 
   const cart = await getCart(userId);
   if (cart) {
-    const existingItem = cart.items.find(
-      (i: { productId: { toString: () => string } }) =>
-        i.productId.toString() === item.productId.toString()
-    );
+    const existingItem = cart.items.find((i) => i.productId === item.productId);
+
     if (existingItem) {
       existingItem.quantity += item.quantity;
     } else {
       cart.items.push({ ...item, price: product.price });
     }
+
     cart.totalAmount += product.price * item.quantity;
+
     await cart.save();
   } else {
     await Cart.create({
