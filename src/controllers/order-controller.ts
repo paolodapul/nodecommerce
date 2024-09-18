@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import OrderCore from "../core/order";
+import * as OrderCore from "../core/order";
 import {
   CreateOrderRequest,
   OrderStatus,
