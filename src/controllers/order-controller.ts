@@ -10,6 +10,7 @@ import {
   UnauthorizedException,
 } from "../types/error-types";
 import * as CartCore from "../core/cart";
+import { AuthRequest } from "../types/auth-types";
 
 export const createOrder = async (
   req: CreateOrderRequest,
@@ -54,12 +55,15 @@ export const getOrder = async (req: Request, res: Response): Promise<void> => {
 };
 
 export const getUserOrders = async (
-  req: Request,
+  req: AuthRequest,
   res: Response
 ): Promise<void> => {
   try {
-    const { userId } = req.params;
-    const orders = await OrderCore.getOrdersByUserId(userId);
+    if (!req.user) {
+      throw new UnauthorizedException("User is not authorized.");
+    }
+
+    const orders = await OrderCore.getOrdersByUserId(req.user.id);
     res.json(orders);
   } catch (error) {
     res.status(500).json({

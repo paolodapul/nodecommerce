@@ -12,6 +12,12 @@ router.post(
 );
 
 router.get(
+  "/",
+  asyncHandler(jwtVerification("view_orders")),
+  asyncHandler(orderController.getUserOrders)
+);
+
+router.get(
   "/:orderId",
   asyncHandler(jwtVerification("view_orders")),
   asyncHandler(orderController.getOrder)
@@ -28,8 +34,6 @@ router.post(
   asyncHandler(jwtVerification("cancel_orders")),
   asyncHandler(orderController.cancelOrder)
 );
-
-router.get("/user/:userId", asyncHandler(orderController.getUserOrders));
 
 router.patch(
   "/:orderId/status",
