@@ -1,12 +1,12 @@
 import { Request, Response, NextFunction } from "express";
 import * as StripeService from "../services/stripe";
-import { WebhookBody } from "../types/payment-types";
-import * as CartCore from "../core/cart";
-import { AuthRequest } from "../types/auth-types";
+import { CheckoutRequest, WebhookBody } from "../types/payment-types";
 import { UnauthorizedException } from "../types/error-types";
+import * as OrderCore from "../core/order";
+import { IOrder } from "../types/order-types";
 
 export const checkout = async (
-  req: AuthRequest,
+  req: CheckoutRequest,
   res: Response,
   next: NextFunction
 ) => {
@@ -15,8 +15,8 @@ export const checkout = async (
       throw new UnauthorizedException("User not found.");
     }
 
-    const cart = await CartCore.getCart(req.user.id);
-    const lineItems = StripeService.transformCartToLineItems(cart);
+    const order: IOrder = await OrderCore.getOrderById(req.body.orderId);
+    const lineItems = StripeService.transformAsLineItems(order);
     const session = await StripeService.createPaymentSession(lineItems);
     res.status(201).json(session);
   } catch (error) {
