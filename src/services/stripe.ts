@@ -9,7 +9,10 @@ dotenv.config({ path: `.env.${ENV}` });
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 
-export const createPaymentSession = async (lineItems: LineItem[]) => {
+export const createPaymentSession = async (
+  lineItems: LineItem[],
+  orderId: string
+) => {
   try {
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
@@ -17,6 +20,9 @@ export const createPaymentSession = async (lineItems: LineItem[]) => {
       mode: "payment",
       success_url: `http://${process.env.HOST}:${process.env.PORT}/api/payments/success`,
       cancel_url: `http://${process.env.HOST}:${process.env.PORT}/api/payments/cancel`,
+      metadata: {
+        orderId: orderId.toString(),
+      },
     });
     return session;
   } catch (error) {
