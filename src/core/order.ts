@@ -8,6 +8,7 @@ import {
 } from "../types/order-types";
 import * as CartCore from "../core/cart";
 import logger from "../utils/logger";
+import { InternalServerErrorException } from "../types/error-types";
 
 export const createOrder = async (orderData: OrderData) => {
   const { items } = await CartCore.getCart(orderData.userId as string);
@@ -16,6 +17,12 @@ export const createOrder = async (orderData: OrderData) => {
     (sum, item) => sum + item.price * item.quantity,
     0
   );
+
+  if (items.length === 0) {
+    throw new InternalServerErrorException(
+      "Cannot create order with empty cart!"
+    );
+  }
 
   const order = new Order({
     userId: orderData.userId,
