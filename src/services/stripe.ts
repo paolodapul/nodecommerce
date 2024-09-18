@@ -2,7 +2,7 @@ import Stripe from "stripe";
 import { InternalServerErrorException } from "../types/error-types";
 import dotenv from "dotenv";
 import { LineItem } from "../types/payment-types";
-import { ICartItem } from "../types/cart-types";
+import { IOrderItem } from "../types/order-types";
 
 const ENV = process.env.NODE_ENV ?? "development";
 dotenv.config({ path: `.env.${ENV}` });
@@ -43,9 +43,9 @@ export const webhook = (rawBody: Buffer | string, signature: string) => {
   }
 };
 
-export const transformCartToLineItems = (cart: { items: ICartItem[] }) =>
+export const transformAsLineItems = (order: { items: IOrderItem[] }) =>
   Object.values(
-    cart.items.reduce<Record<string, LineItem>>(
+    order.items.reduce<Record<string, LineItem>>(
       (acc, { stripePriceId, quantity }) => {
         acc[stripePriceId] = acc[stripePriceId] || {
           price: stripePriceId,
