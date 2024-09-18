@@ -12,7 +12,6 @@ import * as CartCore from "../core/cart";
 
 class OrderService implements IOrderService {
   async createOrder(orderData: OrderData): Promise<IOrderDocument> {
-    // Fetch user cart
     const { items } = await CartCore.getCart(orderData.userId as string);
 
     const totalAmount = items.reduce(
@@ -24,6 +23,7 @@ class OrderService implements IOrderService {
       userId: orderData.userId,
       items,
       totalAmount,
+      status: "pending",
     });
     return await order.save();
   }

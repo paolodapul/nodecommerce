@@ -1,27 +1,38 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import OrderCore from "../core/order";
 import {
   CreateOrderRequest,
   OrderStatus,
   UpdateOrderBody,
 } from "../types/order-types";
+import {
+  InternalServerErrorException,
+  UnauthorizedException,
+} from "../types/error-types";
+import * as CartCore from "../core/cart";
 
 export const createOrder = async (
   req: CreateOrderRequest,
-  res: Response
+  res: Response,
+  next: NextFunction
 ): Promise<void> => {
   try {
-    const orderData = req.body;
+    if (!req.user) {
+      throw new UnauthorizedException("User is not authenticated.");
+    }
+
     const order = await OrderCore.createOrder({
-      ...orderData,
-      userId: req.user?.id as string,
+      userId: req.user?.id,
     });
+
+    if (!order) {
+      throw new InternalServerErrorException("Order creation failed.");
+    }
+
+    await CartCore.clearUserCart(req.user.id);
     res.status(201).json(order);
   } catch (error) {
-    res.status(500).json({
-      error: "Failed to create order",
-      message: (error as Error).message,
-    });
+    next(error);
   }
 };
 
