@@ -4,6 +4,8 @@ export interface ICartItem {
   productId: Types.ObjectId;
   quantity: number;
   price: number;
+  stripeProductId: string;
+  stripePriceId: string;
 }
 
 export interface ICart extends Document {
