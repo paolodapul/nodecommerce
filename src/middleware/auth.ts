@@ -63,3 +63,24 @@ export const checkProductOwnership = async (req: AuthRequest, res: Response, nex
     next(error);
   }
 };
+
+export const optionalProtect = async (req: AuthRequest, res: Response, next: NextFunction) => {
+  let token;
+
+  if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
+    token = req.headers.authorization.split(' ')[1];
+  }
+
+  if (!token) {
+    return next();
+  }
+
+  try {
+    const decoded = jwt.verify(token, config.jwtSecret);
+
+    req.user = await UserModel.findById((decoded as any).id);
+    next();
+  } catch (error) {
+    next();
+  }
+};
