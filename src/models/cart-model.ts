@@ -5,6 +5,8 @@ const CartItemSchema: Schema = new Schema({
   productId: { type: Schema.Types.ObjectId, ref: "Product", required: true },
   quantity: { type: Number, required: true, min: 1 },
   price: { type: Number, required: true, min: 0 },
+  stripeProductId: { type: String },
+  stripePriceId: { type: String },
 });
 
 const CartSchema: Schema = new Schema(
