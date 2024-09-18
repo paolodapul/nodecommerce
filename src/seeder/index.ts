@@ -5,6 +5,8 @@ import { initializeUsers } from "./initialize-users";
 import { initializeCategories } from "./initialize-categories";
 import { initializeProducts } from "./initialize-products";
 import logger from "../utils/logger";
+import { truncateCarts } from "./truncate-carts";
+import { truncateOrders } from "./truncate-orders";
 
 const ENV = process.env.NODE_ENV ?? "development";
 dotenv.config({ path: `.env.${ENV}` });
@@ -19,6 +21,8 @@ async function runSeeders() {
     await initializeUsers();
     await initializeCategories();
     await initializeProducts();
+    await truncateCarts();
+    await truncateOrders();
     logger.info("All seeders completed successfully");
   } catch (error) {
     logger.error("Error running seeders:", error);
