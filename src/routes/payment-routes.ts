@@ -10,11 +10,6 @@ router.post(
   asyncHandler(jwtVerification("add_to_cart")),
   asyncHandler(paymentController.checkout)
 );
-router.post(
-  "/webhook",
-  express.raw({ type: "application/json" }),
-  paymentController.webhook
-);
 router.get("/success", paymentController.handlePaymentSuccess);
 router.get("/cancel", paymentController.handlePaymentCancel);
 
