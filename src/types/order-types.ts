@@ -33,7 +33,6 @@ export interface IOrderDocument extends IOrder, Document {}
 
 export type OrderData = {
   userId: Types.ObjectId | string;
-  items: IOrderItem[];
 };
 
 export type OrderId = string | Types.ObjectId;
