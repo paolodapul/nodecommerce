@@ -2,10 +2,48 @@ import { Product, Category } from "../models/product-model";
 import { User } from "../models/user-model";
 import mongoose from "mongoose";
 import logger from "../utils/logger";
+import Stripe from "stripe";
+import dotenv from "dotenv";
+import { StripeProduct } from "../types/product-types";
+
+const ENV = process.env.NODE_ENV ?? "development";
+dotenv.config({ path: `.env.${ENV}` });
+
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
+
+async function archiveStripeProductsAndDeactivatePrices() {
+  const products = await stripe.products.list({ limit: 100, active: true });
+  for (const product of products.data) {
+    await stripe.products.update(product.id, { active: false });
+  }
+
+  const prices = await stripe.prices.list({ limit: 100, active: true });
+  for (const price of prices.data) {
+    await stripe.prices.update(price.id, { active: false });
+  }
+
+  logger.info("All active Stripe products archived and prices deactivated");
+}
+
+async function createStripeProductAndPrice(product: StripeProduct) {
+  const stripeProduct = await stripe.products.create({
+    name: product.name,
+    description: product.description,
+  });
+
+  const stripePrice = await stripe.prices.create({
+    product: stripeProduct.id,
+    unit_amount: product.price * 100, // Stripe uses cents
+    currency: "usd",
+  });
+
+  return { productId: stripeProduct.id, priceId: stripePrice.id };
+}
 
 async function initializeProducts() {
   try {
     await Product.deleteMany({});
+    await archiveStripeProductsAndDeactivatePrices();
 
     const categories = await Category.find();
     if (categories.length === 0) {
@@ -277,18 +315,23 @@ async function initializeProducts() {
           }))
         : [];
 
+      // Create Stripe product and price
+      const { productId, priceId } = await createStripeProductAndPrice(product);
+
       await Product.create({
         name: product.name,
         price: product.price,
         description: product.description,
         category: category._id,
         reviews: reviews,
+        stripeProductId: productId,
+        stripePriceId: priceId,
       });
     }
 
-    logger.info("Products and reviews seeded successfully");
+    logger.info("Products, reviews, and Stripe data seeded successfully");
   } catch (error) {
-    logger.error("Error seeding products and reviews:", error);
+    logger.error("Error seeding products, reviews, and Stripe data:", error);
   }
 }
 

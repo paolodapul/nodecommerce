@@ -20,6 +20,8 @@ const productSchema = new Schema({
   description: { type: String },
   category: { type: Schema.Types.ObjectId, ref: "Category" },
   reviews: [reviewSchema],
+  stripeProductId: { type: String },
+  stripePriceId: { type: String },
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now },
 });

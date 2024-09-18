@@ -18,9 +18,13 @@ export interface IProduct extends Document {
   reviews: IReview[];
   createdAt: Date;
   updatedAt: Date;
+  stripeProductId: string;
+  stripePriceId: string;
 }
 
 export interface PriceFilter {
   $gte?: number;
   $lte?: number;
 }
+
+export type StripeProduct = Pick<IProduct, "name" | "description" | "price">;
