@@ -1,22 +1,18 @@
 import Stripe from "stripe";
 import { InternalServerErrorException } from "../types/error-types";
 import dotenv from "dotenv";
+import { LineItem } from "../types/payment-types";
 
 const ENV = process.env.NODE_ENV ?? "development";
 dotenv.config({ path: `.env.${ENV}` });
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 
-export const createPaymentSession = async () => {
+export const createPaymentSession = async (lineItems: LineItem[]) => {
   try {
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
-      line_items: [
-        {
-          price: "price_1Q0CmI02TAeUih9DC8Tin75E",
-          quantity: 1,
-        },
-      ],
+      line_items: lineItems,
       mode: "payment",
       success_url: `http://${process.env.HOST}:${process.env.PORT}/api/payments/success`,
       cancel_url: `http://${process.env.HOST}:${process.env.PORT}/api/payments/cancel`,
