@@ -28,7 +28,7 @@ export const checkout = async (
 
     res.status(201).json({
       success: true,
-      message: 'Payment intent created.',
+      message: 'Payment successful!',
       data: {
         orderId: payment.order._id,
         amount: payment.amount,
@@ -59,24 +59,10 @@ export const webhook = async (
   }
 };
 
-export const createPaymentMethod = async (
-  req: AuthRequest,
+export const handlePaymentSuccess = async (
+  req: Request,
   res: Response,
   next: NextFunction,
 ) => {
-  try {
-    const userId = req.user!.id;
-
-    const payment = await PaymentService.createPaymentMethod(userId);
-
-    res.status(201).json({
-      success: true,
-      message: 'Payment method created for user.',
-      data: {
-        paymentMethodId: payment.paymentMethodId,
-      },
-    });
-  } catch (error) {
-    next(error);
-  }
+  res.status(200).send('Payment successful!');
 };
