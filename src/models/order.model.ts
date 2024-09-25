@@ -101,15 +101,12 @@ const OrderSchema: Schema = new Schema(
     paymentInfo: {
       id: {
         type: String,
-        required: true,
       },
       status: {
         type: String,
-        required: true,
       },
       type: {
         type: String,
-        required: true,
       },
     },
     paidAt: {
