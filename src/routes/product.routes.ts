@@ -5,7 +5,7 @@ import {
   getProduct,
   updateProduct,
   deleteProduct,
-  getSellerProducts
+  getSellerProducts,
 } from '../controllers/product.controller';
 import { protect, authorize, checkProductOwnership } from '../middleware/auth';
 import upload from '../utils/fileUpload';
@@ -17,14 +17,18 @@ router
   .get(getProducts)
   .post(protect, authorize('seller'), upload.array('images', 5), createProduct);
 
-router
-  .route('/seller')
-  .get(protect, authorize('seller'), getSellerProducts);
+router.route('/seller').get(protect, authorize('seller'), getSellerProducts);
 
 router
   .route('/:id')
   .get(getProduct)
-  .put(protect, authorize('seller'), checkProductOwnership, upload.array('images', 5), updateProduct)
+  .put(
+    protect,
+    authorize('seller'),
+    checkProductOwnership,
+    upload.array('images', 5),
+    updateProduct,
+  )
   .delete(protect, authorize('seller'), checkProductOwnership, deleteProduct);
 
 export default router;

@@ -8,12 +8,18 @@ const storage = multer.diskStorage({
     cb(null, 'uploads/');
   },
   filename: function (req, file, cb) {
-    cb(null, `${file.fieldname}-${Date.now()}${path.extname(file.originalname)}`);
-  }
+    cb(
+      null,
+      `${file.fieldname}-${Date.now()}${path.extname(file.originalname)}`,
+    );
+  },
 });
 
 // Check file type
-function checkFileType(file: Express.Multer.File, cb: multer.FileFilterCallback) {
+function checkFileType(
+  file: Express.Multer.File,
+  cb: multer.FileFilterCallback,
+) {
   // Allowed ext
   const filetypes = /jpeg|jpg|png|gif|svg/;
   // Check ext
@@ -34,7 +40,7 @@ const upload = multer({
   limits: { fileSize: 1000000 }, // 1MB limit
   fileFilter: function (req, file, cb) {
     checkFileType(file, cb);
-  }
+  },
 });
 
 export default upload;

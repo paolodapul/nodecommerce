@@ -4,7 +4,11 @@ import ApiError from '../utils/apiError';
 import { AuthRequest } from '../middleware/auth';
 import { RegisterInput, LoginInput } from '../schemas/user.schema';
 
-export const register = async (req: Request<{}, {}, RegisterInput>, res: Response, next: NextFunction) => {
+export const register = async (
+  req: Request<{}, {}, RegisterInput>,
+  res: Response,
+  next: NextFunction,
+) => {
   try {
     const { name, email, password, role } = req.body;
 
@@ -23,7 +27,11 @@ export const register = async (req: Request<{}, {}, RegisterInput>, res: Respons
   }
 };
 
-export const login = async (req: Request<{}, {}, LoginInput>, res: Response, next: NextFunction) => {
+export const login = async (
+  req: Request<{}, {}, LoginInput>,
+  res: Response,
+  next: NextFunction,
+) => {
   try {
     const { email, password } = req.body;
 
@@ -48,21 +56,25 @@ export const login = async (req: Request<{}, {}, LoginInput>, res: Response, nex
     res.status(200).json({
       success: true,
       token,
-      role: user.role
+      role: user.role,
     });
   } catch (error) {
     next(error);
   }
 };
 
-export const getMe = async (req: AuthRequest, res: Response, next: NextFunction) => {
+export const getMe = async (
+  req: AuthRequest,
+  res: Response,
+  next: NextFunction,
+) => {
   try {
     const user = await UserModel.findById(req.user.id).select('-password');
 
     if (!user) {
       return res.status(404).json({
         success: false,
-        message: 'User not found'
+        message: 'User not found',
       });
     }
 

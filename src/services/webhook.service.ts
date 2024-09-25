@@ -1,11 +1,11 @@
-import { Workflow } from "../core/workflow";
-import { IOrder, OrderModel } from "../models/order.model";
-import { PaymentModel } from "../models/payment.model";
-import mongoose from "mongoose";
-import ApiError from "../utils/apiError";
-import Stripe from "stripe";
-import { logger } from "../config/logger";
-import { config } from "../config/config";
+import { Workflow } from '../core/workflow';
+import { IOrder, OrderModel } from '../models/order.model';
+import { PaymentModel } from '../models/payment.model';
+import mongoose from 'mongoose';
+import ApiError from '../utils/apiError';
+import Stripe from 'stripe';
+import { logger } from '../config/logger';
+import { config } from '../config/config';
 
 const stripe = new Stripe(config.stripeSecretKey);
 
@@ -37,7 +37,7 @@ export const handleStripeWebhook = async (
       })
       .create(async (data: WorkflowData, session: mongoose.ClientSession) => {
         switch (data.event?.type) {
-          case "payment_intent.succeeded":
+          case 'payment_intent.succeeded':
             data.paymentIntent = data.event.data.object as Stripe.PaymentIntent;
 
             data.payment = await PaymentModel.findOne({
@@ -45,14 +45,14 @@ export const handleStripeWebhook = async (
             }).session(session);
 
             if (!data.payment) {
-              throw new ApiError(404, "Payment not found");
+              throw new ApiError(404, 'Payment not found');
             }
 
-            data.payment.status = "succeeded";
+            data.payment.status = 'succeeded';
             await data.payment.save({ session });
 
             break;
-          case "payment_intent.payment_failed":
+          case 'payment_intent.payment_failed':
             data.paymentIntent = data.event.data.object as Stripe.PaymentIntent;
 
             data.payment = await PaymentModel.findOne({
@@ -60,10 +60,10 @@ export const handleStripeWebhook = async (
             }).session(session);
 
             if (!data.payment) {
-              throw new ApiError(404, "Payment not found");
+              throw new ApiError(404, 'Payment not found');
             }
 
-            data.payment.status = "failed";
+            data.payment.status = 'failed';
             await data.payment.save({ session });
 
             break;
@@ -78,13 +78,13 @@ export const handleStripeWebhook = async (
           );
 
           if (!data.order) {
-            throw new ApiError(404, "Order not found");
+            throw new ApiError(404, 'Order not found');
           }
 
           data.order.status =
-            data.payment.status === "succeeded"
-              ? "processing"
-              : "payment_failed";
+            data.payment.status === 'succeeded'
+              ? 'processing'
+              : 'payment_failed';
 
           data.order.paymentInfo.status = data.payment.status;
 
@@ -102,7 +102,7 @@ export const handleStripeWebhook = async (
   }).run(input);
 
   if (!result.order) {
-    throw new ApiError(500, "Payment failed");
+    throw new ApiError(500, 'Payment failed');
   }
 
   return result.order;

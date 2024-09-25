@@ -6,12 +6,12 @@ import {
   removeFromCartController,
   updateCartItemQuantityController,
   clearCartController,
-  getCartTotalController
+  getCartTotalController,
 } from '../controllers/cart.controller';
 
 const router = express.Router();
 
-router.use(optionalProtect);  // This middleware should allow both authenticated and unauthenticated requests
+router.use(optionalProtect); // This middleware should allow both authenticated and unauthenticated requests
 
 router.get('/', getCartController);
 router.post('/add', addToCartController);

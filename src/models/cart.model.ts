@@ -13,31 +13,36 @@ export interface ICart extends Document {
   updatedAt: Date;
 }
 
-const CartSchema: Schema = new Schema({
-  user: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
-    required: false
-  },
-  sessionId: {
-    type: String,
-    required: false
-  },
-  items: [{
-    product: {
+const CartSchema: Schema = new Schema(
+  {
+    user: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'Product',
-      required: true
+      ref: 'User',
+      required: false,
     },
-    quantity: {
-      type: Number,
-      required: true,
-      min: [1, 'Quantity can not be less than 1.']
-    }
-  }]
-}, {
-  timestamps: true
-});
+    sessionId: {
+      type: String,
+      required: false,
+    },
+    items: [
+      {
+        product: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: 'Product',
+          required: true,
+        },
+        quantity: {
+          type: Number,
+          required: true,
+          min: [1, 'Quantity can not be less than 1.'],
+        },
+      },
+    ],
+  },
+  {
+    timestamps: true,
+  },
+);
 
 CartSchema.index({ user: 1, sessionId: 1 }, { unique: true });
 

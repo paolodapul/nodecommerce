@@ -1,8 +1,14 @@
 import mongoose from 'mongoose';
 
 // Define types for step functions and finally function
-type StepFunction<T, U> = (input: T, session: mongoose.ClientSession) => Promise<U>;
-type FinallyFunction<T> = (input: T, session: mongoose.ClientSession) => Promise<void>;
+type StepFunction<T, U> = (
+  input: T,
+  session: mongoose.ClientSession,
+) => Promise<U>;
+type FinallyFunction<T> = (
+  input: T,
+  session: mongoose.ClientSession,
+) => Promise<void>;
 
 // Workflow class to manage a series of steps
 export class Workflow<T> {
@@ -17,7 +23,7 @@ export class Workflow<T> {
   // Static method to create and configure a workflow
   static createWorkflow<T>(
     retryLimit: number,
-    callback: (workflow: Workflow<T>) => void
+    callback: (workflow: Workflow<T>) => void,
   ): Workflow<T> {
     const workflow = new Workflow<T>(retryLimit);
     callback(workflow);
@@ -57,7 +63,10 @@ export class Workflow<T> {
           } catch (error) {
             attempts++;
             if (attempts === this.retryLimit) {
-              console.error(`Step ${i + 1} failed after ${attempts} attempts:`, error);
+              console.error(
+                `Step ${i + 1} failed after ${attempts} attempts:`,
+                error,
+              );
               throw error;
             }
           }
@@ -65,7 +74,7 @@ export class Workflow<T> {
 
         // If all retry attempts fail, abort the workflow
         if (!success) {
-          throw new Error("Workflow aborted due to step failure.");
+          throw new Error('Workflow aborted due to step failure.');
         }
       }
 
@@ -80,7 +89,7 @@ export class Workflow<T> {
     } catch (error) {
       // Abort the transaction if any step fails
       await session.abortTransaction();
-      console.error("Workflow failed:", error);
+      console.error('Workflow failed:', error);
       throw error;
     } finally {
       // End the session regardless of success or failure

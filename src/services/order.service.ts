@@ -26,30 +26,37 @@ interface WorkflowData extends CreateOrderInput {
 export const createOrder = async (input: CreateOrderInput): Promise<IOrder> => {
   const result = await Workflow.createWorkflow<WorkflowData>(3, (workflow) => {
     workflow
-      .create(async (orderInput: WorkflowData, session: mongoose.ClientSession) => {
-        // Validate products and check stock
-        const productIds = orderInput.items.map(item => item.productId);
-        const products = await ProductModel.find({ _id: { $in: productIds } }).session(session);
+      .create(
+        async (orderInput: WorkflowData, session: mongoose.ClientSession) => {
+          // Validate products and check stock
+          const productIds = orderInput.items.map((item) => item.productId);
+          const products = await ProductModel.find({
+            _id: { $in: productIds },
+          }).session(session);
 
-        if (products.length !== productIds.length) {
-          throw new ApiError(400, 'One or more products not found');
-        }
+          if (products.length !== productIds.length) {
+            throw new ApiError(400, 'One or more products not found');
+          }
 
-        const insufficientStock = products.some((product, index) => {
-          return product.stock < orderInput.items[index].quantity;
-        });
+          const insufficientStock = products.some((product, index) => {
+            return product.stock < orderInput.items[index].quantity;
+          });
 
-        if (insufficientStock) {
-          throw new ApiError(400, 'Insufficient stock for one or more products');
-        }
+          if (insufficientStock) {
+            throw new ApiError(
+              400,
+              'Insufficient stock for one or more products',
+            );
+          }
 
-        return { ...orderInput, products };
-      })
+          return { ...orderInput, products };
+        },
+      )
       .create(async (data: WorkflowData, session: mongoose.ClientSession) => {
         // Calculate total price
         const totalPrice = data.items.reduce((sum, item, index) => {
           const product = data.products![index];
-          return sum + (product.price * item.quantity);
+          return sum + product.price * item.quantity;
         }, 0);
 
         // Calculate shipping fee (you may want to implement a more complex logic)
@@ -67,7 +74,7 @@ export const createOrder = async (input: CreateOrderInput): Promise<IOrder> => {
           items: data.items.map((item, index) => ({
             product: item.productId,
             quantity: item.quantity,
-            price: data.products![index].price
+            price: data.products![index].price,
           })),
           totalPrice: data.totalPrice!,
           shippingFee: data.shippingFee!,
@@ -75,10 +82,8 @@ export const createOrder = async (input: CreateOrderInput): Promise<IOrder> => {
           status: 'pending',
           shippingAddress: data.shippingAddress,
           paymentInfo: {
-            id: 'placeholder', // This should be updated with actual payment info
             status: 'pending',
-            type: 'credit_card' // This should be dynamic based on user's choice
-          }
+          },
         };
 
         const [order] = await OrderModel.create([orderData], { session });
@@ -91,7 +96,7 @@ export const createOrder = async (input: CreateOrderInput): Promise<IOrder> => {
           await ProductModel.findByIdAndUpdate(
             data.items[i].productId,
             { $inc: { stock: -data.items[i].quantity } },
-            { session, new: true }
+            { session, new: true },
           );
         }
 
@@ -116,13 +121,18 @@ export const createOrder = async (input: CreateOrderInput): Promise<IOrder> => {
  * @param {string} [sellerId] - The ID of the seller (for sellers)
  * @returns {Promise<IOrder[]>} Array of orders
  */
-export const getAllOrders = async (userId?: string, sellerId?: string): Promise<IOrder[]> => {
+export const getAllOrders = async (
+  userId?: string,
+  sellerId?: string,
+): Promise<IOrder[]> => {
   let query: any = {};
 
   if (userId) {
     query.user = userId;
   } else if (sellerId) {
-    const sellerProductIds = await ProductModel.find({ seller: sellerId }).distinct('_id');
+    const sellerProductIds = await ProductModel.find({
+      seller: sellerId,
+    }).distinct('_id');
     query = { 'items.product': { $in: sellerProductIds } };
   }
 
@@ -133,8 +143,8 @@ export const getAllOrders = async (userId?: string, sellerId?: string): Promise<
       select: 'name price seller',
       populate: {
         path: 'seller',
-        select: 'name email'
-      }
+        select: 'name email',
+      },
     })
     .select('-__v')
     .sort('-createdAt');
@@ -149,7 +159,11 @@ export const getAllOrders = async (userId?: string, sellerId?: string): Promise<
  * @param {string} userRole - The role of the user making the request
  * @returns {Promise<IOrder | null>} The order if found and authorized, null otherwise
  */
-export const getOrderById = async (orderId: string, userId: string, userRole: string): Promise<IOrder | null> => {
+export const getOrderById = async (
+  orderId: string,
+  userId: string,
+  userRole: string,
+): Promise<IOrder | null> => {
   let order = await OrderModel.findById(orderId)
     .populate('user', 'name email')
     .populate({
@@ -157,8 +171,8 @@ export const getOrderById = async (orderId: string, userId: string, userRole: st
       select: 'name price seller',
       populate: {
         path: 'seller',
-        select: 'name email'
-      }
+        select: 'name email',
+      },
     });
 
   if (!order) {
@@ -171,9 +185,11 @@ export const getOrderById = async (orderId: string, userId: string, userRole: st
   }
 
   if (userRole === 'seller') {
-    const sellerProductIds = await ProductModel.find({ seller: userId }).distinct('_id');
-    const hasSellerProduct = order.items.some(item =>
-      sellerProductIds.includes(item.product._id)
+    const sellerProductIds = await ProductModel.find({
+      seller: userId,
+    }).distinct('_id');
+    const hasSellerProduct = order.items.some((item) =>
+      sellerProductIds.includes(item.product._id),
     );
 
     if (!hasSellerProduct) {
@@ -196,7 +212,7 @@ export const updateOrderStatus = async (
   orderId: string,
   newStatus: OrderStatus,
   userId: string,
-  userRole: string
+  userRole: string,
 ): Promise<IOrder | null> => {
   const order = await OrderModel.findById(orderId).populate('items.product');
 
@@ -206,7 +222,14 @@ export const updateOrderStatus = async (
 
   // Define valid statuses based on user role
   const validStatusesForSellers: OrderStatus[] = ['processing', 'shipped'];
-  const validStatusesForAdmins: OrderStatus[] = ['pending', 'processing', 'shipped', 'delivered', 'cancelled', 'completed'];
+  const validStatusesForAdmins: OrderStatus[] = [
+    'pending',
+    'processing',
+    'shipped',
+    'delivered',
+    'cancelled',
+    'completed',
+  ];
 
   let validStatuses: OrderStatus[];
   if (userRole === 'admin') {
@@ -215,8 +238,8 @@ export const updateOrderStatus = async (
     validStatuses = validStatusesForSellers;
 
     // Check if the seller owns any product in the order
-    const hasSellerProduct = order.items.some(item => {
-      const product = item.product as any;  // Type assertion due to population
+    const hasSellerProduct = order.items.some((item) => {
+      const product = item.product as any; // Type assertion due to population
       return product.seller.toString() === userId;
     });
 
@@ -229,12 +252,18 @@ export const updateOrderStatus = async (
 
   // Validate the new status
   if (!validStatuses.includes(newStatus)) {
-    throw new ApiError(400, `Invalid order status. Valid statuses for ${userRole} are: ${validStatuses.join(', ')}`);
+    throw new ApiError(
+      400,
+      `Invalid order status. Valid statuses for ${userRole} are: ${validStatuses.join(', ')}`,
+    );
   }
 
   // Prevent certain status changes
   if (order.status === 'cancelled' || order.status === 'completed') {
-    throw new ApiError(400, 'Cannot change status of cancelled or completed orders');
+    throw new ApiError(
+      400,
+      'Cannot change status of cancelled or completed orders',
+    );
   }
 
   // Set completedAt date if the new status is 'completed'

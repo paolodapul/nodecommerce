@@ -9,10 +9,17 @@ export interface AuthRequest extends Request {
   user?: any;
 }
 
-export const protect = async (req: AuthRequest, res: Response, next: NextFunction) => {
+export const protect = async (
+  req: AuthRequest,
+  res: Response,
+  next: NextFunction,
+) => {
   let token;
 
-  if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
+  if (
+    req.headers.authorization &&
+    req.headers.authorization.startsWith('Bearer')
+  ) {
     token = req.headers.authorization.split(' ')[1];
   }
 
@@ -37,13 +44,22 @@ export const authorize = (...roles: string[]) => {
       return next(new ApiError(401, 'Not authorized to access this route'));
     }
     if (!roles.includes(req.user.role)) {
-      return next(new ApiError(403, `User role ${req.user.role} is not authorized to access this route`));
+      return next(
+        new ApiError(
+          403,
+          `User role ${req.user.role} is not authorized to access this route`,
+        ),
+      );
     }
     next();
   };
 };
 
-export const checkProductOwnership = async (req: AuthRequest, res: Response, next: NextFunction) => {
+export const checkProductOwnership = async (
+  req: AuthRequest,
+  res: Response,
+  next: NextFunction,
+) => {
   try {
     const productId = req.params.id;
     const userId = req.user!.id;
@@ -64,10 +80,17 @@ export const checkProductOwnership = async (req: AuthRequest, res: Response, nex
   }
 };
 
-export const optionalProtect = async (req: AuthRequest, res: Response, next: NextFunction) => {
+export const optionalProtect = async (
+  req: AuthRequest,
+  res: Response,
+  next: NextFunction,
+) => {
   let token;
 
-  if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
+  if (
+    req.headers.authorization &&
+    req.headers.authorization.startsWith('Bearer')
+  ) {
     token = req.headers.authorization.split(' ')[1];
   }
 

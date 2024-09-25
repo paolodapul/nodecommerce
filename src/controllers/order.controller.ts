@@ -1,10 +1,19 @@
 import { Response, NextFunction } from 'express';
-import { createOrder, getAllOrders, getOrderById, updateOrderStatus } from '../services/order.service';
+import {
+  createOrder,
+  getAllOrders,
+  getOrderById,
+  updateOrderStatus,
+} from '../services/order.service';
 import { AuthRequest } from '../middleware/auth';
 import ApiError from '../utils/apiError';
 import { OrderStatus } from '../models/order.model';
 
-export const createOrderController = async (req: AuthRequest, res: Response, next: NextFunction) => {
+export const createOrderController = async (
+  req: AuthRequest,
+  res: Response,
+  next: NextFunction,
+) => {
   try {
     const { items, shippingAddress } = req.body;
     const userId = req.user!.id;
@@ -19,15 +28,19 @@ export const createOrderController = async (req: AuthRequest, res: Response, nex
         totalPrice: order.totalPrice,
         shippingFee: order.shippingFee,
         finalPrice: order.finalPrice,
-        status: order.status
-      }
+        status: order.status,
+      },
     });
   } catch (error) {
     next(error);
   }
 };
 
-export const getAllOrdersController = async (req: AuthRequest, res: Response, next: NextFunction) => {
+export const getAllOrdersController = async (
+  req: AuthRequest,
+  res: Response,
+  next: NextFunction,
+) => {
   try {
     let orders;
     switch (req.user!.role) {
@@ -44,10 +57,12 @@ export const getAllOrdersController = async (req: AuthRequest, res: Response, ne
         orders = await getAllOrders(undefined, req.user!.id);
         break;
       default:
-        return res.status(403).json({ success: false, message: 'Unauthorized role' });
+        return res
+          .status(403)
+          .json({ success: false, message: 'Unauthorized role' });
     }
 
-    const formattedOrders = orders.map(order => ({
+    const formattedOrders = orders.map((order) => ({
       id: order._id,
       user: order.user,
       items: order.items,
@@ -58,20 +73,24 @@ export const getAllOrdersController = async (req: AuthRequest, res: Response, ne
       shippingAddress: order.shippingAddress,
       paymentInfo: order.paymentInfo,
       createdAt: order.createdAt,
-      updatedAt: order.updatedAt
+      updatedAt: order.updatedAt,
     }));
 
     res.status(200).json({
       success: true,
       count: formattedOrders.length,
-      data: formattedOrders
+      data: formattedOrders,
     });
   } catch (error) {
     next(error);
   }
 };
 
-export const getOrderByIdController = async (req: AuthRequest, res: Response, next: NextFunction) => {
+export const getOrderByIdController = async (
+  req: AuthRequest,
+  res: Response,
+  next: NextFunction,
+) => {
   try {
     const orderId = req.params.id;
     const userId = req.user!.id;
@@ -85,14 +104,18 @@ export const getOrderByIdController = async (req: AuthRequest, res: Response, ne
 
     res.status(200).json({
       success: true,
-      data: order
+      data: order,
     });
   } catch (error) {
     next(error);
   }
 };
 
-export const updateOrderStatusController = async (req: AuthRequest, res: Response, next: NextFunction) => {
+export const updateOrderStatusController = async (
+  req: AuthRequest,
+  res: Response,
+  next: NextFunction,
+) => {
   try {
     const orderId = req.params.id;
     const { status } = req.body;
@@ -100,16 +123,30 @@ export const updateOrderStatusController = async (req: AuthRequest, res: Respons
     const userRole = req.user!.role;
 
     // Validate that status is a valid OrderStatus
-    if (!['pending', 'processing', 'shipped', 'delivered', 'cancelled', 'completed'].includes(status)) {
+    if (
+      ![
+        'pending',
+        'processing',
+        'shipped',
+        'delivered',
+        'cancelled',
+        'completed',
+      ].includes(status)
+    ) {
       return next(new ApiError(400, 'Invalid order status provided'));
     }
 
-    const updatedOrder = await updateOrderStatus(orderId, status as OrderStatus, userId, userRole);
+    const updatedOrder = await updateOrderStatus(
+      orderId,
+      status as OrderStatus,
+      userId,
+      userRole,
+    );
 
     res.status(200).json({
       success: true,
       message: 'Order status updated successfully',
-      data: updatedOrder
+      data: updatedOrder,
     });
   } catch (error) {
     next(error);

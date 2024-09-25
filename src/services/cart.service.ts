@@ -6,7 +6,7 @@ import mongoose from 'mongoose';
 const populateCart = (cart: ICart) =>
   cart.populate({
     path: 'items.product',
-    select: 'name price stock'
+    select: 'name price stock',
   });
 
 const getCartQuery = (userId?: string, sessionId?: string) => {
@@ -15,7 +15,10 @@ const getCartQuery = (userId?: string, sessionId?: string) => {
   throw new ApiError(400, 'User ID or Session ID is required');
 };
 
-export const getCart = async (userId?: string, sessionId?: string): Promise<ICart> => {
+export const getCart = async (
+  userId?: string,
+  sessionId?: string,
+): Promise<ICart> => {
   const query = getCartQuery(userId, sessionId);
   let cart = await CartModel.findOne(query);
   if (!cart) {
@@ -25,7 +28,12 @@ export const getCart = async (userId?: string, sessionId?: string): Promise<ICar
   return populateCart(cart);
 };
 
-export const addToCart = async (userId: string | undefined, sessionId: string | undefined, productId: string, quantity: number): Promise<ICart> => {
+export const addToCart = async (
+  userId: string | undefined,
+  sessionId: string | undefined,
+  productId: string,
+  quantity: number,
+): Promise<ICart> => {
   try {
     const product = await ProductModel.findById(productId);
     if (!product) {
@@ -44,7 +52,9 @@ export const addToCart = async (userId: string | undefined, sessionId: string | 
       cart = new CartModel({ ...query, items: [] });
     }
 
-    const cartItemIndex = cart.items.findIndex(item => item.product.toString() === productId);
+    const cartItemIndex = cart.items.findIndex(
+      (item) => item.product.toString() === productId,
+    );
 
     if (cartItemIndex > -1) {
       cart.items[cartItemIndex].quantity += quantity;
@@ -63,7 +73,11 @@ export const addToCart = async (userId: string | undefined, sessionId: string | 
   }
 };
 
-export const removeFromCart = async (userId: string | undefined, sessionId: string | undefined, productId: string): Promise<ICart> => {
+export const removeFromCart = async (
+  userId: string | undefined,
+  sessionId: string | undefined,
+  productId: string,
+): Promise<ICart> => {
   const session = await mongoose.startSession();
   session.startTransaction();
 
@@ -74,7 +88,9 @@ export const removeFromCart = async (userId: string | undefined, sessionId: stri
       throw new ApiError(404, 'Cart not found');
     }
 
-    const cartItemIndex = cart.items.findIndex(item => item.product.toString() === productId);
+    const cartItemIndex = cart.items.findIndex(
+      (item) => item.product.toString() === productId,
+    );
     if (cartItemIndex === -1) {
       throw new ApiError(404, 'Item not found in cart');
     }
@@ -84,7 +100,11 @@ export const removeFromCart = async (userId: string | undefined, sessionId: stri
 
     await cart.save({ session });
 
-    await ProductModel.findByIdAndUpdate(productId, { $inc: { stock: removedQuantity } }, { session });
+    await ProductModel.findByIdAndUpdate(
+      productId,
+      { $inc: { stock: removedQuantity } },
+      { session },
+    );
 
     await session.commitTransaction();
     return populateCart(cart);
@@ -96,7 +116,12 @@ export const removeFromCart = async (userId: string | undefined, sessionId: stri
   }
 };
 
-export const updateCartItemQuantity = async (userId: string | undefined, sessionId: string | undefined, productId: string, quantity: number): Promise<ICart> => {
+export const updateCartItemQuantity = async (
+  userId: string | undefined,
+  sessionId: string | undefined,
+  productId: string,
+  quantity: number,
+): Promise<ICart> => {
   const session = await mongoose.startSession();
   session.startTransaction();
 
@@ -107,7 +132,9 @@ export const updateCartItemQuantity = async (userId: string | undefined, session
       throw new ApiError(404, 'Cart not found');
     }
 
-    const cartItemIndex = cart.items.findIndex(item => item.product.toString() === productId);
+    const cartItemIndex = cart.items.findIndex(
+      (item) => item.product.toString() === productId,
+    );
     if (cartItemIndex === -1) {
       throw new ApiError(404, 'Item not found in cart');
     }
@@ -127,7 +154,11 @@ export const updateCartItemQuantity = async (userId: string | undefined, session
 
     await cart.save({ session });
 
-    await ProductModel.findByIdAndUpdate(productId, { $inc: { stock: -quantityDifference } }, { session });
+    await ProductModel.findByIdAndUpdate(
+      productId,
+      { $inc: { stock: -quantityDifference } },
+      { session },
+    );
 
     await session.commitTransaction();
     return populateCart(cart);
@@ -139,7 +170,10 @@ export const updateCartItemQuantity = async (userId: string | undefined, session
   }
 };
 
-export const clearCart = async (userId: string | undefined, sessionId: string | undefined): Promise<void> => {
+export const clearCart = async (
+  userId: string | undefined,
+  sessionId: string | undefined,
+): Promise<void> => {
   const session = await mongoose.startSession();
   session.startTransaction();
 
@@ -151,7 +185,11 @@ export const clearCart = async (userId: string | undefined, sessionId: string | 
     }
 
     for (const item of cart.items) {
-      await ProductModel.findByIdAndUpdate(item.product, { $inc: { stock: item.quantity } }, { session });
+      await ProductModel.findByIdAndUpdate(
+        item.product,
+        { $inc: { stock: item.quantity } },
+        { session },
+      );
     }
 
     cart.items = [];
@@ -166,15 +204,21 @@ export const clearCart = async (userId: string | undefined, sessionId: string | 
   }
 };
 
-export const getCartTotal = async (userId: string | undefined, sessionId: string | undefined): Promise<number> => {
+export const getCartTotal = async (
+  userId: string | undefined,
+  sessionId: string | undefined,
+): Promise<number> => {
   const query = getCartQuery(userId, sessionId);
-  const cart = await CartModel.findOne(query).populate('items.product', 'price');
+  const cart = await CartModel.findOne(query).populate(
+    'items.product',
+    'price',
+  );
   if (!cart) {
     return 0;
   }
 
   return cart.items.reduce((total, item) => {
     const product = item.product as any;
-    return total + (product.price * item.quantity);
+    return total + product.price * item.quantity;
   }, 0);
 };
