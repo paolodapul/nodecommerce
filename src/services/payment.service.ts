@@ -6,13 +6,15 @@ import ApiError from '../utils/apiError';
 import Stripe from 'stripe';
 import { logger } from '../config/logger';
 import { UserModel } from '../models/user.model';
+import { config } from '../config/config';
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
+const stripe = new Stripe(config.stripeSecretKey);
 
 interface ProcessPaymentInput {
   orderId: string;
   paymentMethodId: string;
   userId: string;
+  stripeCustomerId: string;
 }
 
 interface WorkflowData extends ProcessPaymentInput {
@@ -21,28 +23,6 @@ interface WorkflowData extends ProcessPaymentInput {
   stripePaymentIntent?: Stripe.PaymentIntent;
   payment?: IPayment;
 }
-
-export const createPaymentMethod = async (userId: string) => {
-  const paymentMethod = await stripe.paymentMethods.create({
-    type: 'card',
-    card: {
-      number: '4242424242424242',
-      exp_month: 12,
-      exp_year: 2024,
-      cvc: '123',
-    },
-  });
-
-  await UserModel.findByIdAndUpdate(
-    userId,
-    { stripePaymentMethodId: paymentMethod.id },
-    { new: true, runValidators: true },
-  );
-
-  return {
-    paymentMethodId: paymentMethod.id,
-  };
-};
 
 export const processPayment = async (
   input: ProcessPaymentInput,
@@ -77,6 +57,8 @@ export const processPayment = async (
           currency: 'usd',
           payment_method: data.stripePaymentMethod!.id,
           confirm: true,
+          customer: data.stripeCustomerId,
+          return_url: `http://${config.host}:${config.port}/api/payments/success`,
         });
 
         return { ...data, stripePaymentIntent: paymentIntent };

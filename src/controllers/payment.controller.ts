@@ -16,13 +16,14 @@ export const checkout = async (
     const userId = req.user!.id;
 
     const user = await UserModel.findById(userId).select(
-      'stripePaymentMethodId',
+      'stripePaymentMethodId stripeCustomerId',
     );
 
     const payment = await PaymentService.processPayment({
       orderId: orderId,
       paymentMethodId: user?.stripePaymentMethodId!,
       userId: userId,
+      stripeCustomerId: user?.stripeCustomerId!,
     });
 
     res.status(201).json({
