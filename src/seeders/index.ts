@@ -2,6 +2,8 @@ import dotenv from 'dotenv';
 import { initializeProducts } from './product.seeder';
 import { logger } from '../config/logger';
 import { connectDB } from '../config/database';
+import { truncateCarts } from './truncate-cart';
+import { truncateOrders } from './truncate-orders';
 
 dotenv.config();
 
@@ -11,6 +13,8 @@ async function runSeeders() {
   try {
     await connectDB();
     await initializeProducts();
+    await truncateCarts();
+    await truncateOrders();
     logger.info('All seeders completed successfully');
   } catch (error) {
     logger.error('Error running seeders:', error);
