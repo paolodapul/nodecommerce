@@ -9,6 +9,7 @@ export interface IUser extends Document {
   password: string;
   role: 'buyer' | 'seller';
   stripePaymentMethodId?: string;
+  stripeCustomerId?: string;
   comparePassword(candidatePassword: string): Promise<boolean>;
   getSignedJwtToken(): string;
 }
@@ -42,6 +43,10 @@ const userSchema = new mongoose.Schema<IUser>(
       default: 'buyer',
     },
     stripePaymentMethodId: {
+      type: String,
+      default: null,
+    },
+    stripeCustomerId: {
       type: String,
       default: null,
     },
