@@ -4,6 +4,7 @@ import { logger } from '../config/logger';
 import { connectDB } from '../config/database';
 import { truncateCarts } from './truncate-cart';
 import { truncateOrders } from './truncate-orders';
+import { initializeUsers } from './user.seeder';
 
 dotenv.config();
 
@@ -12,6 +13,7 @@ const MONGO_URI = process.env.MONGO_URI;
 async function runSeeders() {
   try {
     await connectDB();
+    await initializeUsers();
     await initializeProducts();
     await truncateCarts();
     await truncateOrders();
