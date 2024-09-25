@@ -1,4 +1,4 @@
-import mongoose, { Document, Schema } from "mongoose";
+import mongoose, { Document, Schema } from 'mongoose';
 
 export interface IPayment extends Document {
   order: mongoose.Types.ObjectId;
@@ -19,18 +19,18 @@ const PaymentSchema: Schema = new Schema(
   {
     order: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Order",
+      ref: 'Order',
       required: true,
     },
     user: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
+      ref: 'User',
       required: true,
     },
     amount: {
       type: Number,
       required: true,
-      min: [0, "Amount cannot be negative"],
+      min: [0, 'Amount cannot be negative'],
     },
     paymentMethod: {
       type: String,
@@ -39,17 +39,24 @@ const PaymentSchema: Schema = new Schema(
     paymentType: {
       type: String,
       required: true,
-      enum: ["credit_card", "debit_card", "paypal", "bank_transfer", "other"],
+      enum: [
+        'credit_card',
+        'card',
+        'debit_card',
+        'paypal',
+        'bank_transfer',
+        'other',
+      ],
     },
     status: {
       type: String,
       required: true,
       enum: [
-        "pending",
-        "succeeded",
-        "failed",
-        "refunded",
-        "partially_refunded",
+        'pending',
+        'succeeded',
+        'failed',
+        'refunded',
+        'partially_refunded',
       ],
     },
     transactionId: {
@@ -60,11 +67,11 @@ const PaymentSchema: Schema = new Schema(
     currency: {
       type: String,
       required: true,
-      default: "USD",
+      default: 'USD',
     },
     refundedAmount: {
       type: Number,
-      min: [0, "Refunded amount cannot be negative"],
+      min: [0, 'Refunded amount cannot be negative'],
     },
     metadata: {
       type: Map,
@@ -73,10 +80,10 @@ const PaymentSchema: Schema = new Schema(
   },
   {
     timestamps: true,
-  }
+  },
 );
 
 // Index for efficient querying
 PaymentSchema.index({ order: 1, transactionId: 1 });
 
-export const PaymentModel = mongoose.model<IPayment>("Payment", PaymentSchema);
+export const PaymentModel = mongoose.model<IPayment>('Payment', PaymentSchema);
