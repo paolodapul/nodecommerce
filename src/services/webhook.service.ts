@@ -5,8 +5,9 @@ import mongoose from "mongoose";
 import ApiError from "../utils/apiError";
 import Stripe from "stripe";
 import { logger } from "../config/logger";
+import { config } from "../config/config";
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
+const stripe = new Stripe(config.stripeSecretKey);
 
 interface WebhookInput {
   rawBody: string;
@@ -21,7 +22,7 @@ interface WorkflowData extends WebhookInput {
 }
 
 export const handleStripeWebhook = async (
-  input: WebhookInput
+  input: WebhookInput,
 ): Promise<IOrder> => {
   const result = await Workflow.createWorkflow<WorkflowData>(3, (workflow) => {
     workflow
@@ -29,7 +30,7 @@ export const handleStripeWebhook = async (
         const event = stripe.webhooks.constructEvent(
           data.rawBody,
           data.signature,
-          process.env.STRIPE_WEBHOOK_SECRET!
+          config.stripeWebhookSecret,
         );
 
         return { event };
@@ -73,7 +74,7 @@ export const handleStripeWebhook = async (
       .create(async (data: WorkflowData, session: mongoose.ClientSession) => {
         if (data.payment) {
           data.order = await OrderModel.findById(data.payment.order).session(
-            session
+            session,
           );
 
           if (!data.order) {
@@ -94,7 +95,7 @@ export const handleStripeWebhook = async (
       .finally(async (data: WorkflowData, session: mongoose.ClientSession) => {
         if (data.order && data.payment) {
           logger.info(
-            `Order ${data.order._id} updated. Payment status: ${data.payment.status}`
+            `Order ${data.order._id} updated. Payment status: ${data.payment.status}`,
           );
         }
       });

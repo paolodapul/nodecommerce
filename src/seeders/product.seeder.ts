@@ -1,12 +1,10 @@
 import Stripe from 'stripe';
-import dotenv from 'dotenv';
 import { logger } from '../config/logger';
 import { ProductModel, StripeProduct } from '../models/product.model';
 import { UserModel } from '../models/user.model';
+import { config } from '../config/config';
 
-dotenv.config();
-
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
+const stripe = new Stripe(config.stripeSecretKey);
 
 async function archiveStripeProductsAndDeactivatePrices() {
   const products = await stripe.products.list({ limit: 100, active: true });
